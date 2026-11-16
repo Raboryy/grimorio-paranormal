@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Ficha OP">
+<meta name="theme-color" content="#08080a">
+<title>Grimório Paranormal</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+:root{
+  --bg: #08080a;
+  --panel: #111116;
+  --border: #272732;
+  --border-neon: #7e22ce;
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --purple-neon: #c084fc;
+  --purple-mid: #9333ea;
+  --purple-dark: #581c87;
+  --red: #991b1b;
+  --red-neon: #ef4444;
+  --gold: #fbbf24;
+  --input: #050507;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text)}
+body{padding:10px 10px 90px 10px;font-size:16px;-webkit-text-size-adjust:100%}
+.wrap{max-width:980px;margin:0 auto}
+
+header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--border-neon);box-shadow:0 0 15px rgba(147,51,234,0.15);padding:12px 14px;border-radius:12px;margin-bottom:12px}
+header h1{font-size:1.15rem;color:var(--purple-neon);text-transform:uppercase;letter-spacing:1.5px;flex:1;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 8px;text-shadow:0 0 8px rgba(192,132,252,0.4)}
+
+button,select,input,textarea{background:var(--input);color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:8px;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
+select{background-image:none;padding-right:8px}
+button{font-weight:bold;min-height:44px;cursor:pointer;transition:all 0.2s}
+button:active{opacity:.8;transform:scale(0.98)}
+
+.btn-p{background:var(--purple-mid);border-color:var(--purple-neon);box-shadow:0 0 10px rgba(147,51,234,0.3);color:#fff}
+.btn-s{background:#181820;border-color:var(--border)}
+.btn-sm{min-height:36px;padding:6px 10px;font-size:14px}
+.btn-red{background:var(--red);border-color:var(--red-neon);box-shadow:0 0 10px rgba(239,68,68,0.3)}
+
+.view{display:none}.view.active{display:block}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.card h2{font-size:.95rem;color:var(--purple-neon);margin-bottom:10px;border-bottom:1px solid var(--border-neon);padding-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+
+.row{display:flex;align-items:center;margin-bottom:8px}
+.row>label{flex:1;font-size:.9rem;color:var(--muted);padding-right:8px}
+.row>input,.row>select{flex:2;min-width:0}
+.row>input[type=checkbox]{flex:none;width:28px;height:28px;accent-color:var(--purple-mid)}
+
+.btnrow{display:flex;flex-wrap:wrap}
+.btnrow>*{margin-right:6px;margin-bottom:6px}
+
+.agent{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--purple-mid)}
+.agent h3{font-size:1.1rem;color:var(--text)}.agent p{font-size:.85rem;color:var(--muted);margin-top:2px}
+
+.tabs{display:flex;background:var(--panel);border:1px solid var(--border-neon);border-radius:12px;overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;position:-webkit-sticky;position:sticky;top:0;z-index:50;box-shadow:0 4px 15px rgba(0,0,0,0.6)}
+.tab{background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:12px 14px;white-space:nowrap;flex:1;font-size:.9rem;text-transform:uppercase;letter-spacing:0.5px}
+.tab.active{color:var(--purple-neon);background:#1a102f;border-bottom-color:var(--purple-neon);text-shadow:0 0 6px rgba(192,132,252,0.4)}
+
+.sheet-tab{display:none}.sheet-tab.active{display:block}
+
+.grid3{display:grid;grid-template-columns:1fr;grid-gap:10px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr;grid-gap:10px}
+@media (min-width:700px){.grid3{grid-template-columns:1fr 1fr 1fr}.grid2{grid-template-columns:1fr 1fr}}
+
+.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat h4{font-size:.85rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
+.stat .val{display:flex;justify-content:center;align-items:center;font-size:1.3rem;font-weight:bold;margin-bottom:6px}
+.stat .val input{width:70px;text-align:center;font-size:1.3rem;font-weight:bold;padding:4px;color:var(--purple-neon)}
+.stat .val span{margin:0 6px;color:var(--muted)}
+.bar{height:12px;background:#030304;border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
+.bar>div{height:100%;transition:width .2s}
+.stat .btnrow{justify-content:center}.stat .btnrow button{min-width:50px}
+
+.estados{min-height:30px;margin-bottom:12px;text-align:center}
+.chip{display:inline-block;padding:6px 14px;border-radius:16px;font-weight:bold;font-size:.85rem;margin-right:6px;margin-bottom:6px;letter-spacing:0.5px}
+.chip-red{background:rgba(153,27,27,0.4);border:1px solid var(--red-neon);color:#fca5a5;box-shadow:0 0 8px rgba(239,68,68,0.3)}
+.chip-orange{background:rgba(154,52,18,0.4);border:1px solid #f97316;color:#fed7aa}
+.chip-purple{background:rgba(88,28,135,0.4);border:1px solid var(--purple-neon);color:#e9d5ff;box-shadow:0 0 8px rgba(192,132,252,0.3)}
+.chip-ok{background:rgba(20,83,45,0.4);border:1px solid #22c55e;color:#bbf7d0}
+
+.attrs{display:grid;grid-template-columns:repeat(5,1fr);grid-gap:8px}
+.attr{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center}
+.attr h4{font-size:.8rem;color:var(--purple-neon)}
+.attr input{width:100%;max-width:60px;text-align:center;font-size:1.3rem;font-weight:bold;margin:4px 0;padding:6px 2px;color:var(--purple-neon)}
+.attr button{width:100%;font-size:.8rem;padding:6px 0}
+
+.minis{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:8px;margin-bottom:10px}
+.mini{background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.mini small{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;margin-bottom:2px}
+.mini b{font-size:1.2rem;color:var(--purple-neon)}
+
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{border-bottom:1px solid var(--border);padding:8px 6px;text-align:left;vertical-align:middle}
+th{color:var(--purple-neon);font-size:.75rem;text-transform:uppercase;letter-spacing:0.5px}
+td select,td input{width:100%;padding:6px 4px;font-size:14px}
+td.num{text-align:center;font-weight:bold;color:var(--purple-neon)}
+
+.sub{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.sub .row input[type=number]{flex:1}
+.cols{display:flex}.cols>div{flex:1;margin-right:6px}.cols>div:last-child{margin-right:0}
+.cols label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:2px}
+.cols input,.cols select{width:100%;padding:8px 6px}
+
+textarea{width:100%;height:110px;resize:vertical}
+.hint{font-size:.8rem;color:var(--muted);margin-bottom:8px}
+
+.published-sheet {
+  background: #0d0d12;
+  border: 2px solid var(--purple-mid);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: inset 0 0 20px rgba(88,28,135,0.2), 0 5px 25px rgba(0,0,0,0.8);
+  margin-bottom: 14px;
+}
+.pub-header {
+  border-bottom: 1px solid var(--border-neon);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.pub-title {
+  font-size: 1.25rem;
+  color: var(--purple-neon);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.pub-sub {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.pub-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 8px;
+  margin-bottom: 10px;
+}
+.pub-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+.pub-item label {
+  font-size: 0.75rem;
+  color: var(--purple-neon);
+  text-transform: uppercase;
+  display: block;
+}
+.pub-item span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text);
+}
+
+#dice-fab{position:fixed;right:16px;bottom:16px;width:60px;height:60px;border-radius:30px;background:var(--purple-mid);border:2px solid var(--purple-neon);box-shadow:0 0 15px rgba(192,132,252,0.5);font-size:26px;z-index:900;padding:0;color:#fff}
+#dice-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:#0d0d12;border-top:2px solid var(--purple-neon);padding:12px 14px 16px;z-index:1000;max-height:75vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -10px 30px rgba(0,0,0,0.9)}
+#dice-sheet h3{font-size:.95rem;color:var(--purple-neon)}
+.dice-main{font-size:3rem;font-weight:bold;text-align:center;line-height:1.1;margin:6px 0;color:var(--purple-neon);text-shadow:0 0 10px rgba(192,132,252,0.4)}
+.dice-main.crit{color:var(--gold);text-shadow:0 0 10px rgba(251,191,36,0.6)}
+.dice-main.fail{color:var(--red-neon)}
+#dice-detail{text-align:center;font-size:.95rem;color:var(--muted);margin-bottom:8px;min-height:20px}
+#dice-log{font-size:.8rem;color:var(--muted);margin:8px 0}
+#dice-log div{padding:3px 0;border-bottom:1px solid var(--border)}
+
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:2000;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal .card{max-width:620px;margin:20px auto}
+#toast{position:fixed;left:50%;top:60px;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:var(--panel);border:1px solid var(--purple-neon);color:var(--purple-neon);padding:10px 18px;border-radius:10px;z-index:3000;display:none;max-width:90%;text-align:center;box-shadow:0 0 15px rgba(147,51,234,0.3);font-weight:bold}
+#save-ind{font-size:.75rem;color:var(--muted);margin-right:8px;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- LISTA -->
+<div id="view-list" class="view active">
+  <header><h1>Grimório Paranormal</h1><button class="btn-p" type="button" data-act="novo">+ Novo Agente</button></header>
+  <div class="card"><button class="btn-s" type="button" data-act="backup" style="width:100%">Exportar / Importar Backup (.json)</button></div>
+  <div id="agent-list"></div>
+</div>
+
+<!-- FICHA -->
+<div id="view-sheet" class="view">
+  <header>
+    <button class="btn-s" type="button" data-act="voltar">&larr; Voltar</button>
+    <h1 id="sheet-title">Ficha</h1>
+    <span id="save-ind">Salvo</span>
+    <button class="btn-p" type="button" data-act="salvar">Salvar</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" type="button" data-act="aba" data-arg="ficha">Ficha</button>
+    <button class="tab" type="button" data-act="aba" data-arg="publicada">Visão Geral</button>
+    <button class="tab" type="button" data-act="aba" data-arg="pericias">Perícias</button>
+    <button class="tab" type="button" data-act="aba" data-arg="inv">Inventário</button>
+    <button class="tab" type="button" data-act="aba" data-arg="rituais">Rituais</button>
+    <button class="tab" type="button" data-act="aba" data-arg="diario">Diário</button>
+  </div>
+
+  <!-- ABA FICHA (EDITÁVEL) -->
+  <div id="tab-ficha" class="sheet-tab active">
+    <div class="card">
+      <h2>Identidade do Agente</h2>
+      <div class="row"><label>Nome</label><input type="text" id="f-nome" data-f="nome"></div>
+      <div class="row"><label>Jogador</label><input type="text" id="f-jogador" data-f="jogador"></div>
+      <div class="row"><label>Origem</label><input type="text" id="f-origem" data-f="origem"></div>
+      <div class="row"><label>Classe</label>
+        <select id="f-classe" data-f="classe"><option>Combatente</option><option>Especialista</option><option>Ocultista</option></select></div>
+      <div class="row"><label>Trilha</label><input type="text" id="f-trilha" data-f="trilha"></div>
+      <div class="row"><label>Patente</label><select id="f-patente" data-f="patente"></select></div>
+      <div class="row"><label>NEX (5% a 99%)</label><input type="number" id="f-nex" data-f="nex" data-n="1" min="5" max="99" step="5"></div>
+      <div class="hint" id="info-nivel"></div>
+    </div>
+
+    <div class="grid3">
+      <div class="stat">
+        <h4>PV (Vida)</h4>
+        <div class="val"><input type="number" id="cur-pv" data-cur="pv"><span>/</span><b id="max-pv" style="color:var(--red-neon)">0</b></div>
+        <div class="bar"><div id="bar-pv" style="background:var(--red)"></div></div>
+        <div class="btnrow">
+          <button class="btn-s" type="button" data-act="ajuste" data-t="pv" data-d="-5">-5</button>
+          <button class="btn-s" type="button" data-act="ajuste" data-t="pv" data-d="-1">-1</button>
+          <button class="btn-red" type="button" data-act="ajuste" data-t="pv" data-d="1">+1</button>
+          <button class="btn-red" type="button" data-act="ajuste" data-t="pv" data-d="5">+5</button>
+        </div>
+      </div>
+      <div class="stat">
+        <h4>PE (Esforço)</h4>
+        <div class="val"><input type="number" id="cur-pe" data-cur="pe"><span>/</span><b id="max-pe" style="color:var(--purple-neon)">0</b></div>
+        <div class="bar"><div id="bar-pe" style="background:var(--purple-mid)"></div></div>
+        <div class="btnrow">
+          <button class="btn-s" type="button" data-act="ajuste" data-t="pe" data-d="-5">-5</button>
+          <button class="btn-s" type="button" data-act="ajuste" data-t="pe" data-d="-1">-1</button>
+          <button class="btn-p" type="button" data-act="ajuste" data-t="pe" data-d="1">+1</button>
+          <button class="btn-p" type="button" data-act="ajuste" data-t="pe" data-d="5">+5</button>
+        </div>
+      </div>
+      <div class="stat">
+        <h4>Sanidade</h4>
+        <div class="val"><input type="number" id="cur-san" data-cur="san"><span>/</span><b id="max-san" style="color:var(--purple-neon)">0</b></div>
+        <div class="bar"><div id="bar-san" style="background:var(--purple-dark)"></div></div>
+        <div class="btnrow">
+          <button class="btn-s" type="button" data-act="ajuste" data-t="san" data-d="-5">-5</button>
+          <button class="btn-s" type="button" data-act="ajuste" data-t="san" data-d="-1">-1</button>
+          <button class="btn-p" type="button" data-act="ajuste" data-t="san" data-d="1">+1</button>
+          <button class="btn-p" type="button" data-act="ajuste" data-t="san" data-d="5">+5</button>
+        </div>
+      </div>
+    </div>
+    <div class="estados" id="estados"></div>
+
+    <div class="card">
+      <h2>Atributos (toque em Rolar)</h2>
+      <div class="attrs">
+        <div class="attr"><h4>AGI</h4><input type="number" id="a-agi" data-a="agi" min="0" max="9"><button class="btn-s" type="button" data-act="rolarAttr" data-arg="agi">Rolar</button></div>
+        <div class="attr"><h4>FOR</h4><input type="number" id="a-for" data-a="for" min="0" max="9"><button class="btn-s" type="button" data-act="rolarAttr" data-arg="for">Rolar</button></div>
+        <div class="attr"><h4>INT</h4><input type="number" id="a-int" data-a="int" min="0" max="9"><button class="btn-s" type="button" data-act="rolarAttr" data-arg="int">Rolar</button></div>
+        <div class="attr"><h4>PRE</h4><input type="number" id="a-pre" data-a="pre" min="0" max="9"><button class="btn-s" type="button" data-act="rolarAttr" data-arg="pre">Rolar</button></div>
+        <div class="attr"><h4>VIG</h4><input type="number" id="a-vig" data-a="vig" min="0" max="9"><button class="btn-s" type="button" data-act="rolarAttr" data-arg="vig">Rolar</button></div>
+      </div>
+      <div class="hint" style="margin-top:8px">Atributo = quantidade de d20 (usa o maior). Atributo 0 = 2d20 usando o menor.</div>
+    </div>
+
+    <div class="card">
+      <h2>Defesa e Proteção</h2>
+      <div class="minis">
+        <div class="mini"><small>Defesa</small><b id="d-def">10</b></div>
+        <div class="mini"><small>Esquiva (Def+Refl.)</small><b id="d-esq">10</b></div>
+        <div class="mini"><small>Bloqueio (RD)</small><b id="d-blo">0</b></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn-s btn-sm" type="button" data-act="rolarPer" data-arg="reflexos">Rolar Reflexos</button>
+        <button class="btn-s btn-sm" type="button" data-act="rolarPer" data-arg="fortitude">Rolar Fortitude</button>
+        <button class="btn-s btn-sm" type="button" data-act="rolarPer" data-arg="vontade">Rolar Vontade</button>
+      </div>
+      <div class="row"><label>Proteção equipada</label>
+        <select id="f-protecao" data-f="protecao">
+          <option value="nenhuma">Nenhuma</option>
+          <option value="leve">Leve (+5 Defesa, 2 espaços)</option>
+          <option value="pesada">Pesada (+10 Defesa, RD 2, 5 espaços)</option>
+        </select></div>
+      <div class="row"><label>Escudo (+2 Defesa, 2 espaços)</label><input type="checkbox" id="f-escudo" data-f="escudo"></div>
+      <div class="cols" style="margin-top:6px">
+        <div><label>Mod. Defesa</label><input type="number" id="b-def" data-b="def"></div>
+        <div><label>RD fixa extra</label><input type="number" id="b-rd" data-b="rd"></div>
+        <div><label>Mod. PV máx</label><input type="number" id="b-pv" data-b="pv"></div>
+        <div><label>Mod. PE máx</label><input type="number" id="b-pe" data-b="pe"></div>
+        <div><label>Mod. SAN máx</label><input type="number" id="b-san" data-b="san"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA VISÃO GERAL (PUBLICADA / IMPRESSA JUNTAS) -->
+  <div id="tab-publicada" class="sheet-tab">
+    <div class="published-sheet">
+      <div class="pub-header">
+        <div class="pub-title" id="pub-nome">Nome do Agente</div>
+        <div class="pub-sub" id="pub-subdet">Classe · NEX 5%</div>
+      </div>
+      <div class="pub-grid">
+        <div class="pub-item"><label>Jogador</label><span id="pub-jogador">-</span></div>
+        <div class="pub-item"><label>Origem</label><span id="pub-origem">-</span></div>
+        <div class="pub-item"><label>Trilha</label><span id="pub-trilha">-</span></div>
+        <div class="pub-item"><label>Patente</label><span id="pub-patente">-</span></div>
+      </div>
+      <div class="pub-grid">
+        <div class="pub-item"><label>Pontos de Vida (PV)</label><span id="pub-pv">0 / 0</span></div>
+        <div class="pub-item"><label>Pontos de Esforço (PE)</label><span id="pub-pe">0 / 0</span></div>
+        <div class="pub-item"><label>Sanidade (SAN)</label><span id="pub-san">0 / 0</span></div>
+        <div class="pub-item"><label>Defesa</label><span id="pub-def">10</span></div>
+      </div>
+      <div class="pub-grid">
+        <div class="pub-item"><label>Atributos (AGI / FOR / INT / PRE / VIG)</label><span id="pub-attrs">1 / 1 / 1 / 1 / 1</span></div>
+        <div class="pub-item"><label>Carga de Itens</label><span id="pub-carga">0 / 5</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Perícias Principais (Treinadas)</h2>
+      <div id="pub-pericias-list" style="font-size:0.9rem; color:var(--muted)"></div>
+    </div>
+
+    <div class="card">
+      <h2>Resumo de Ataques</h2>
+      <div id="pub-armas-list" style="font-size:0.9rem; color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <!-- ABA PERICIAS -->
+  <div id="tab-pericias" class="sheet-tab">
+    <div class="card">
+      <h2>Perícias</h2>
+      <div class="row"><label>Mostrar apenas treinadas</label><input type="checkbox" id="f-filtro" data-ui="filtro"></div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table>
+          <thead><tr><th>Perícia</th><th style="width:130px">Treino</th><th style="width:70px">Outros</th><th>Total</th><th></th></tr></thead>
+          <tbody id="pericias-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA INVENTARIO -->
+  <div id="tab-inv" class="sheet-tab">
+    <div class="card">
+      <h2>Armas e Ataques</h2>
+      <button class="btn-p" type="button" data-act="addArma" style="margin-bottom:10px">+ Adicionar Arma</button>
+      <div id="armas"></div>
+    </div>
+    <div class="card">
+      <h2>Carga e Crédito</h2>
+      <div class="minis">
+        <div class="mini"><small>Espaços usados</small><b id="c-uso">0</b></div>
+        <div class="mini"><small>Limite</small><b id="c-max">0</b></div>
+        <div class="mini"><small>Crédito</small><b id="c-cred">-</b></div>
+      </div>
+      <div id="c-status" style="margin-bottom:6px"></div>
+      <div class="hint" id="c-lim"></div>
+    </div>
+    <div class="card">
+      <h2>Itens</h2>
+      <button class="btn-p" type="button" data-act="addItem" style="margin-bottom:10px">+ Adicionar Item</button>
+      <div id="itens"></div>
+    </div>
+  </div>
+
+  <!-- ABA RITUAIS -->
+  <div id="tab-rituais" class="sheet-tab">
+    <div class="card">
+      <h2>Grimório de Rituais</h2>
+      <div class="minis">
+        <div class="mini"><small>DT dos rituais</small><b id="r-dt">0</b></div>
+        <div class="mini"><small>Limite PE/turno</small><b id="r-lim">0</b></div>
+        <div class="mini"><small>PE atual</small><b id="r-pe">0</b></div>
+      </div>
+      <div class="hint">DT = 10 + limite de PE por turno + Presença.</div>
+      <button class="btn-p" type="button" data-act="addRit" style="margin-bottom:10px">+ Adicionar Ritual</button>
+      <div id="rituais"></div>
+    </div>
+    <div class="card">
+      <h2>Poderes e Habilidades</h2>
+      <button class="btn-p" type="button" data-act="addPod" style="margin-bottom:10px">+ Adicionar Poder</button>
+      <div id="poderes"></div>
+    </div>
+  </div>
+
+  <!-- ABA DIARIO -->
+  <div id="tab-diario" class="sheet-tab">
+    <div class="card">
+      <h2>Diário da Investigação</h2>
+      <textarea id="f-diario" data-f="diario" style="height:320px" placeholder="Pistas, segredos, NPCs, histórico da campanha..."></textarea>
+    </div>
+  </div>
+</div>
+</div>
+
+<button id="dice-fab" type="button" data-act="diceToggle">&#127922;</button>
+
+<div id="dice-sheet">
+  <div class="btnrow" style="justify-content:space-between;margin-bottom:0">
+    <h3 id="dice-title">Rolador de dados</h3>
+    <button class="btn-s btn-sm" type="button" data-act="diceFechar">Fechar</button>
+  </div>
+  <div class="dice-main" id="dice-main">-</div>
+  <div id="dice-detail"></div>
+  <div class="btnrow" id="dice-extra"></div>
+  <div class="row" style="margin-top:6px">
+    <input type="text" id="free-expr" value="1d20" style="flex:3;margin-right:8px" autocapitalize="off" autocorrect="off">
+    <button class="btn-p" type="button" data-act="rolarLivre" style="flex:1">Rolar</button>
+  </div>
+  <div class="btnrow">
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d4">d4</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d6">d6</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d8">d8</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d10">d10</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d12">d12</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d20">d20</button>
+    <button class="btn-s btn-sm" type="button" data-act="rapido" data-arg="1d100">d100</button>
+  </div>
+  <div id="dice-log"></div>
+</div>
+
+<div id="backup-modal" class="modal">
+  <div class="card">
+    <h2>Backup dos agentes (.json)</h2>
+    <p class="hint">O Safari do iOS 12 não baixa arquivos. Use <b>Compartilhar</b> ou <b>Copiar</b> para guardar. Para restaurar, escolha um arquivo ou cole o texto abaixo.</p>
+    <textarea id="backup-text" style="height:160px;font-family:Menlo,monospace;font-size:12px;margin-bottom:10px"></textarea>
+    <div class="btnrow">
+      <button class="btn-p" type="button" data-act="bkShare">Compartilhar</button>
+      <button class="btn-s" type="button" data-act="bkCopy">Copiar</button>
+      <button class="btn-s" type="button" data-act="bkDownload">Baixar .json</button>
+    </div>
+    <div class="row" style="margin-top:6px"><label>Importar arquivo .json</label><input type="file" id="bk-file" accept=".json,application/json,text/plain"></div>
+    <div class="btnrow">
+      <button class="btn-p" type="button" data-act="bkImport">Restaurar do texto</button>
+      <button class="btn-s" type="button" data-act="bkClose">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function () {
+'use strict';
+
+var KEY = 'grimorio_op_v2';
+
+var PERICIAS = [
+  {id:'acrobacia',n:'Acrobacia',a:'agi'},{id:'adestramento',n:'Adestramento',a:'pre'},{id:'artes',n:'Artes',a:'pre'},
+  {id:'atletismo',n:'Atletismo',a:'for'},{id:'atualidades',n:'Atualidades',a:'int'},{id:'ciencias',n:'Ciências',a:'int'},
+  {id:'crime',n:'Crime',a:'agi'},{id:'diplomacia',n:'Diplomacia',a:'pre'},{id:'enganacao',n:'Enganação',a:'pre'},
+  {id:'fortitude',n:'Fortitude',a:'vig'},{id:'furtividade',n:'Furtividade',a:'agi'},{id:'iniciativa',n:'Iniciativa',a:'agi'},
+  {id:'intimidacao',n:'Intimidação',a:'pre'},{id:'intuicao',n:'Intuição',a:'pre'},{id:'investigacao',n:'Investigação',a:'int'},
+  {id:'luta',n:'Luta',a:'for'},{id:'medicina',n:'Medicina',a:'int'},{id:'ocultismo',n:'Ocultismo',a:'int'},
+  {id:'percepcao',n:'Percepção',a:'pre'},{id:'pilotagem',n:'Pilotagem',a:'agi'},{id:'pontaria',n:'Pontaria',a:'agi'},
+  {id:'profissao',n:'Profissão',a:'int'},{id:'reflexos',n:'Reflexos',a:'agi'},{id:'religiao',n:'Religião',a:'pre'},
+  {id:'sobrevivencia',n:'Sobrevivência',a:'int'},{id:'tatica',n:'Tática',a:'int'},{id:'tecnologia',n:'Tecnologia',a:'int'},
+  {id:'vontade',n:'Vontade',a:'pre'}
+];
+var TREINO = [0, 5, 10, 15];
+var TREINO_NOME = ['Destreinado (+0)', 'Treinado (+5)', 'Veterano (+10)', 'Expert (+15)'];
+var ATTR_NOME = {agi:'Agilidade','for':'Força',int:'Intelecto',pre:'Presença',vig:'Vigor'};
+var CLASSES = {
+  Combatente:   {pv:[20,4], pe:[2,2], san:[12,3]},
+  Especialista: {pv:[16,3], pe:[3,3], san:[16,4]},
+  Ocultista:    {pv:[12,2], pe:[4,4], san:[20,5]}
+};
+var PATENTES = [
+  {n:'Recruta', cred:'Baixo', pp:0, lim:[2,0,0,0]},
+  {n:'Operador', cred:'Médio', pp:20, lim:[3,1,0,0]},
+  {n:'Agente Especial', cred:'Médio', pp:50, lim:[3,2,1,0]},
+  {n:'Oficial de Operações', cred:'Alto', pp:100, lim:[3,3,2,1]},
+  {n:'Agente de Elite', cred:'Ilimitado', pp:200, lim:[3,3,3,2]}
+];
+var ELEMENTOS = ['Sangue', 'Morte', 'Conhecimento', 'Energia', 'Medo'];
+var CUSTO_CIRC = [0, 1, 3, 6, 10];
+
+var agentes = [];
+var atualId = null;
+var ag = null;
+var logRolagens = [];
+var saveTimer = null;
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function num(v) { var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+function toast(msg) {
+  var t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toast._t); toast._t = setTimeout(function () { t.style.display = 'none'; }, 2200);
+}
+
+function carregar() {
+  try {
+    var s = localStorage.getItem(KEY);
+    if (s) { var p = JSON.parse(s); if (Array.isArray(p)) return p; }
+  } catch (e) {}
+  return [];
+}
+function salvarAgora() {
+  clearTimeout(saveTimer);
+  try {
+    localStorage.setItem(KEY, JSON.stringify(agentes));
+    var d = new Date();
+    $('save-ind').textContent = 'Salvo ' + ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+  } catch (e) {
+    $('save-ind').textContent = 'ERRO!';
+  }
+}
+function agendarSalvar() {
+  $('save-ind').textContent = 'Salvando...';
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(salvarAgora, 300);
+}
+
+function normalizar(a) {
+  if (!a.id) a.id = 'ag_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+  if (!CLASSES[a.classe]) a.classe = 'Combatente';
+  a.nex = Math.max(5, Math.min(99, parseInt(a.nex, 10) || 5));
+  if (!a.attrs) a.attrs = {};
+  ['agi', 'for', 'int', 'pre', 'vig'].forEach(function (k) { a.attrs[k] = parseInt(a.attrs[k], 10); if (isNaN(a.attrs[k])) a.attrs[k] = 1; });
+  if (!a.bonus) a.bonus = {};
+  ['def', 'rd', 'pv', 'pe', 'san'].forEach(function (k) { a.bonus[k] = num(a.bonus[k]); });
+  if (!a.pericias) a.pericias = {};
+  if (!Array.isArray(a.armas)) a.armas = [];
+  if (!Array.isArray(a.itens)) a.itens = [];
+  if (!Array.isArray(a.rituais)) a.rituais = [];
+  if (!Array.isArray(a.poderes)) a.poderes = [];
+  if (!a.protecao) a.protecao = 'nenhuma';
+  a.escudo = !!a.escudo;
+  if (!a.patente) a.patente = 'Recruta';
+  a.nome = a.nome || ''; a.jogador = a.jogador || ''; a.origem = a.origem || ''; a.trilha = a.trilha || ''; a.diario = a.diario || '';
+  return a;
+}
+
+function nivelDe(nex) { return nex >= 99 ? 20 : Math.max(1, Math.floor(nex / 5)); }
+function periciaById(id) { for (var i = 0; i < PERICIAS.length; i++) if (PERICIAS[i].id === id) return PERICIAS[i]; return null; }
+function perBonus(id) {
+  var p = ag.pericias[id]; if (!p) return 0;
+  return (TREINO[p.t] || 0) + num(p.o);
+}
+function patenteDe(a) { for (var i = 0; i < PATENTES.length; i++) if (PATENTES[i].n === a.patente) return PATENTES[i]; return PATENTES[0]; }
+
+function derivados() {
+  var c = CLASSES[ag.classe], at = ag.attrs, b = ag.bonus;
+  var nivel = nivelDe(ag.nex), passos = nivel - 1;
+  var d = {nivel: nivel};
+  d.pvMax = c.pv[0] + at.vig + passos * (c.pv[1] + at.vig) + b.pv;
+  d.peMax = c.pe[0] + at.pre + passos * (c.pe[1] + at.pre) + b.pe;
+  d.sanMax = c.san[0] + passos * c.san[1] + b.san;
+  d.limPE = nivel;
+  d.dt = 10 + nivel + at.pre;
+  var defProt = ag.protecao === 'leve' ? 5 : (ag.protecao === 'pesada' ? 10 : 0);
+  var rdProt = ag.protecao === 'pesada' ? 2 : 0;
+  d.def = 10 + at.agi + defProt + (ag.escudo ? 2 : 0) + b.def;
+  d.rd = rdProt + b.rd;
+  d.esq = d.def + perBonus('reflexos');
+  d.blo = perBonus('fortitude');
+  d.cargaMax = at['for'] > 0 ? at['for'] * 5 : 2;
+  var uso = 0, i;
+  for (i = 0; i < ag.itens.length; i++) uso += num(ag.itens[i].esp) * (num(ag.itens[i].qtd) || 0);
+  for (i = 0; i < ag.armas.length; i++) uso += num(ag.armas[i].esp);
+  uso += ag.protecao === 'leve' ? 2 : (ag.protecao === 'pesada' ? 5 : 0);
+  uso += ag.escudo ? 2 : 0;
+  d.cargaUso = uso;
+  return d;
+}
+
+function renderLista() {
+  var box = $('agent-list');
+  if (!agentes.length) {
+    box.innerHTML = '<p class="hint" style="text-align:center;padding:24px">Nenhum agente ainda. Toque em "+ Novo Agente".</p>';
+    return;
+  }
+  var h = '';
+  for (var i = 0; i < agentes.length; i++) {
+    var a = agentes[i];
+    h += '<div class="agent"><div><h3>' + esc(a.nome || 'Agente sem nome') + '</h3><p>' + esc(a.classe) + ' · NEX ' + esc(a.nex) + '% · ' + esc(a.patente) + '</p></div>' +
+      '<div class="btnrow" style="margin:0"><button class="btn-p" type="button" data-act="abrir" data-arg="' + esc(a.id) + '">Abrir</button>' +
+      '<button class="btn-s" type="button" data-act="excluir" data-arg="' + esc(a.id) + '">Excluir</button></div></div>';
+  }
+  box.innerHTML = h;
+}
+
+function novoAgente() {
+  var a = normalizar({nome: 'Novo Agente', classe: 'Combatente', nex: 5, patente: 'Recruta'});
+  ag = a;
+  var d = derivados();
+  a.pvAtual = d.pvMax; a.peAtual = d.peMax; a.sanAtual = d.sanMax;
+  agentes.push(a);
+  salvarAgora();
+  abrir(a.id);
+}
+
+function abrir(id) {
+  for (var i = 0; i < agentes.length; i++) if (agentes[i].id === id) ag = agentes[i];
+  if (!ag || ag.id !== id) return;
+  atualId = id;
+  $('view-list').className = 'view';
+  $('view-sheet').className = 'view active';
+  preencherForm();
+  aba('ficha');
+  window.scrollTo(0, 0);
+}
+
+function voltar() {
+  salvarAgora();
+  $('view-sheet').className = 'view';
+  $('view-list').className = 'view active';
+  $('dice-sheet').style.display = 'none';
+  renderLista();
+}
+
+function excluir(id) {
+  if (!confirm('Apagar este agente?')) return;
+  agentes = agentes.filter(function (a) { return a.id !== id; });
+  salvarAgora(); renderLista();
+}
+
+function preencherForm() {
+  var sel = $('f-patente'), h = '';
+  for (var i = 0; i < PATENTES.length; i++) h += '<option value="' + esc(PATENTES[i].n) + '">' + esc(PATENTES[i].n) + '</option>';
+  sel.innerHTML = h;
+
+  var els = document.querySelectorAll('[data-f]');
+  for (var j = 0; j < els.length; j++) {
+    var e = els[j], k = e.getAttribute('data-f');
+    if (e.type === 'checkbox') e.checked = !!ag[k]; else e.value = ag[k];
+  }
+  var at = ['agi', 'for', 'int', 'pre', 'vig'];
+  for (j = 0; j < at.length; j++) $('a-' + at[j]).value = ag.attrs[at[j]];
+  var bs = ['def', 'rd', 'pv', 'pe', 'san'];
+  for (j = 0; j < bs.length; j++) $('b-' + bs[j]).value = ag.bonus[bs[j]];
+  $('sheet-title').textContent = ag.nome || 'Ficha';
+  renderPericias(); renderArmas(); renderItens(); renderRituais(); renderPoderes();
+  atualizar();
+}
+
+function setBar(id, cur, max) {
+  var p = max > 0 ? Math.max(0, Math.min(100, cur / max * 100)) : 0;
+  $('bar-' + id).style.width = p + '%';
+}
+
+function atualizar() {
+  if (!ag) return;
+  var d = derivados();
+  if (ag.pvAtual === undefined) ag.pvAtual = d.pvMax;
+  if (ag.peAtual === undefined) ag.peAtual = d.peMax;
+  if (ag.sanAtual === undefined) ag.sanAtual = d.sanMax;
+  if (ag.pvAtual > d.pvMax) ag.pvAtual = d.pvMax;
+  if (ag.peAtual > d.peMax) ag.peAtual = d.peMax;
+  if (ag.sanAtual > d.sanMax) ag.sanAtual = d.sanMax;
+
+  var ts = ['pv', 'pe', 'san'], mx = {pv: d.pvMax, pe: d.peMax, san: d.sanMax};
+  for (var i = 0; i < ts.length; i++) {
+    var t = ts[i], cur = ag[t + 'Atual'];
+    if (document.activeElement !== $('cur-' + t)) $('cur-' + t).value = cur;
+    $('max-' + t).textContent = mx[t];
+    setBar(t, cur, mx[t]);
+  }
+
+  var est = '';
+  if (ag.pvAtual <= 0) est += '<span class="chip chip-red">MORRENDO</span>';
+  else if (ag.pvAtual <= d.pvMax / 2) est += '<span class="chip chip-orange">MACHUCADO</span>';
+  if (ag.sanAtual <= 0) est += '<span class="chip chip-purple">ENLOUQUECENDO</span>';
+  if (!est) est = '<span class="chip chip-ok">Estável / Sã Consciência</span>';
+  $('estados').innerHTML = est;
+
+  $('info-nivel').textContent = 'NEX ' + ag.nex + '% = nível ' + d.nivel + ' · limite de PE/turno: ' + d.limPE + ' · DT: ' + d.dt;
+  $('d-def').textContent = d.def;
+  $('d-esq').textContent = d.esq;
+  $('d-blo').textContent = d.blo + (d.rd ? ' (+RD ' + d.rd + ')' : '');
+
+  var pat = patenteDe(ag);
+  $('c-uso').textContent = d.cargaUso;
+  $('c-max').textContent = d.cargaMax;
+  $('c-cred').textContent = pat.cred;
+  $('c-status').innerHTML = d.cargaUso > d.cargaMax ? '<span class="chip chip-red">SOBRECARREGADO</span>' : '<span class="chip chip-ok">Carga OK</span>';
+  
+  // Atualizar Visão Geral (Publicada)
+  $('pub-nome').textContent = ag.nome || 'Agente Sem Nome';
+  $('pub-subdet').textContent = esc(ag.classe) + (ag.trilha ? ' (' + esc(ag.trilha) + ')' : '') + ' · NEX ' + ag.nex + '%';
+  $('pub-jogador').textContent = ag.jogador || '-';
+  $('pub-origem').textContent = ag.origem || '-';
+  $('pub-trilha').textContent = ag.trilha || '-';
+  $('pub-patente').textContent = ag.patente;
+  $('pub-pv').textContent = ag.pvAtual + ' / ' + d.pvMax;
+  $('pub-pe').textContent = ag.peAtual + ' / ' + d.peMax;
+  $('pub-san').textContent = ag.sanAtual + ' / ' + d.sanMax;
+  $('pub-def').textContent = d.def;
+  $('pub-attrs').textContent = ag.attrs.agi + ' / ' + ag.attrs.for + ' / ' + ag.attrs.int + ' / ' + ag.attrs.pre + ' / ' + ag.attrs.vig;
+  $('pub-carga').textContent = d.cargaUso + ' / ' + d.cargaMax;
+
+  var pubH = '';
+  for (var pi = 0; pi < PERICIAS.length; pi++) {
+    var pItem = PERICIAS[pi], pDat = ag.pericias[pItem.id];
+    if (pDat && pDat.t > 0) {
+      var tot = perBonus(pItem.id);
+      pubH += esc(pItem.n) + ': <b>' + (tot >= 0 ? '+' : '') + tot + '</b>  |  ';
+    }
+  }
+  $('pub-pericias-list').innerHTML = pubH || 'Nenhuma perícia treinada registrada.';
+
+  var armH = '';
+  for (var ai = 0; ai < ag.armas.length; ai++) {
+    var arm = ag.armas[ai];
+    armH += '• <b>' + esc(arm.nome) + '</b> (Dano: ' + esc(arm.dano) + ')<br>';
+  }
+  $('pub-armas-list').innerHTML = armH || 'Nenhuma arma cadastrada.';
+
+  $('r-dt').textContent = d.dt;
+  $('r-lim').textContent = d.limPE;
+  $('r-pe').textContent = ag.peAtual + '/' + d.peMax;
+}
+
+function onField(e) {
+  var el = e.target;
+  if (!ag || !el.getAttribute) return;
+  var f = el.getAttribute('data-f'), a = el.getAttribute('data-a'), b = el.getAttribute('data-b');
+  var cur = el.getAttribute('data-cur'), l = el.getAttribute('data-l'), per = el.getAttribute('data-per');
+
+  if (f) {
+    var v;
+    if (el.type === 'checkbox') v = el.checked;
+    else if (el.getAttribute('data-n')) { v = parseInt(el.value, 10); if (isNaN(v)) v = 5; }
+    else v = el.value;
+    if (f === 'nex' && e.type === 'change') { v = Math.max(5, Math.min(99, v)); el.value = v; }
+    ag[f] = v;
+    if (f === 'nome') $('sheet-title').textContent = v || 'Ficha';
+    atualizar(); agendarSalvar();
+  } else if (a) {
+    ag.attrs[a] = Math.max(0, parseInt(el.value, 10) || 0);
+    if (e.type === 'change') renderPericias();
+    atualizar(); agendarSalvar();
+  } else if (b) {
+    ag.bonus[b] = num(el.value);
+    atualizar(); agendarSalvar();
+  } else if (cur) {
+    var d = derivados(), max = {pv: d.pvMax, pe: d.peMax, san: d.sanMax}[cur];
+    var n = parseInt(el.value, 10); if (isNaN(n)) n = 0;
+    ag[cur + 'Atual'] = Math.max(0, Math.min(max, n));
+    if (e.type === 'change') el.value = ag[cur + 'Atual'];
+    atualizar(); agendarSalvar();
+  } else if (l) {
+    var i = parseInt(el.getAttribute('data-i'), 10), k = el.getAttribute('data-k');
+    var val = el.getAttribute('data-num') ? num(el.value) : el.value;
+    if (!ag[l] || !ag[l][i]) return;
+    ag[l][i][k] = val;
+    atualizar(); agendarSalvar();
+  } else if (per) {
+    if (e.type !== 'change') return;
+    if (!ag.pericias[per]) ag.pericias[per] = {t: 0, o: 0};
+    var pk = el.getAttribute('data-pk');
+    ag.pericias[per][pk] = pk === 't' ? parseInt(el.value, 10) : num(el.value);
+    renderPericias(); atualizar(); agendarSalvar();
+  } else if (el.getAttribute('data-ui') === 'filtro') {
+    renderPericias();
+  }
+}
+
+function renderPericias() {
+  if (!ag) return;
+  var filtro = $('f-filtro').checked, h = '';
+  for (var i = 0; i < PERICIAS.length; i++) {
+    var p = PERICIAS[i], dado = ag.pericias[p.id] || {t: 0, o: 0};
+    if (filtro && !dado.t) continue;
+    var total = (TREINO[dado.t] || 0) + num(dado.o);
+    var nd = ag.attrs[p.a];
+    h += '<tr><td><b>' + esc(p.n) + '</b><br><small style="color:var(--muted)">' + p.a.toUpperCase() + ' · ' + (nd > 0 ? nd + 'd20' : '2d20 pior') + '</small></td>';
+    h += '<td><select data-per="' + p.id + '" data-pk="t">';
+    for (var t = 0; t < 4; t++) h += '<option value="' + t + '"' + (dado.t === t ? ' selected' : '') + '>' + TREINO_NOME[t] + '</option>';
+    h += '</select></td>';
+    h += '<td><input type="number" value="' + esc(num(dado.o)) + '" data-per="' + p.id + '" data-pk="o"></td>';
+    h += '<td class="num">' + (total >= 0 ? '+' : '') + total + '</td>';
+    h += '<td><button class="btn-s btn-sm" type="button" data-act="rolarPer" data-arg="' + p.id + '">Rolar</button></td></tr>';
+  }
+  if (!h) h = '<tr><td colspan="5" class="hint">Nenhuma perícia treinada ainda.</td></tr>';
+  $('pericias-tbody').innerHTML = h;
+}
+
+function fld(tipo, lista, i, k, val, extra) {
+  return '<input type="' + tipo + '" value="' + esc(val) + '" data-l="' + lista + '" data-i="' + i + '" data-k="' + k + '" ' + (extra || '') + '>';
+}
+function sel(lista, i, k, val, opts, extra) {
+  var h = '<select data-l="' + lista + '" data-i="' + i + '" data-k="' + k + '" ' + (extra || '') + '>';
+  for (var j = 0; j < opts.length; j++) h += '<option value="' + esc(opts[j][0]) + '"' + (String(opts[j][0]) === String(val) ? ' selected' : '') + '>' + esc(opts[j][1]) + '</option>';
+  return h + '</select>';
+}
+function area(lista, i, k, val, ph) {
+  return '<textarea style="height:70px" placeholder="' + esc(ph) + '" data-l="' + lista + '" data-i="' + i + '" data-k="' + k + '">' + esc(val) + '</textarea>';
+}
+
+function renderArmas() {
+  var h = '';
+  for (var i = 0; i < ag.armas.length; i++) {
+    var w = ag.armas[i];
+    h += '<div class="sub">';
+    h += '<div class="row"><label>Nome</label>' + fld('text', 'armas', i, 'nome', w.nome) + '</div>';
+    h += '<div class="cols">';
+    h += '<div><label>Perícia</label>' + sel('armas', i, 'pericia', w.pericia, [['luta', 'Luta'], ['pontaria', 'Pontaria']]) + '</div>';
+    h += '<div><label>Bônus ataque</label>' + fld('number', 'armas', i, 'bonus', w.bonus, 'data-num="1"') + '</div>';
+    h += '<div><label>Dano</label>' + fld('text', 'armas', i, 'dano', w.dano, 'autocapitalize="off"') + '</div>';
+    h += '</div><div class="cols" style="margin-top:6px">';
+    h += '<div><label>Margem ameaça</label>' + fld('number', 'armas', i, 'margem', w.margem, 'data-num="1" min="2" max="20"') + '</div>';
+    h += '<div><label>Mult. crítico</label>' + fld('number', 'armas', i, 'mult', w.mult, 'data-num="1" min="2" max="6"') + '</div>';
+    h += '<div><label>Espaços</label>' + fld('number', 'armas', i, 'esp', w.esp, 'data-num="1"') + '</div>';
+    h += '</div>';
+    h += '<div class="btnrow" style="margin-top:8px"><button class="btn-p" type="button" data-act="atacar" data-arg="' + i + '">Atacar</button>' +
+      '<button class="btn-s" type="button" data-act="dano" data-arg="' + i + '">Dano</button>' +
+      '<button class="btn-s" type="button" data-act="danoCrit" data-arg="' + i + '">Crítico</button>' +
+      '<button class="btn-s btn-sm" type="button" data-act="delArma" data-arg="' + i + '">Remover</button></div>';
+    h += '</div>';
+  }
+  $('armas').innerHTML = h || '<p class="hint">Nenhuma arma cadastrada.</p>';
+}
+
+function renderItens() {
+  var h = '', cats = [[0, '0'], [1, 'I'], [2, 'II'], [3, 'III'], [4, 'IV']];
+  for (var i = 0; i < ag.itens.length; i++) {
+    var it = ag.itens[i];
+    h += '<div class="sub"><div class="row"><label>Item</label>' + fld('text', 'itens', i, 'nome', it.nome) + '</div>';
+    h += '<div class="cols"><div><label>Categoria</label>' + sel('itens', i, 'cat', it.cat, cats) + '</div>' +
+      '<div><label>Espaços</label>' + fld('number', 'itens', i, 'esp', it.esp, 'data-num="1" step="0.5"') + '</div>' +
+      '<div><label>Qtd.</label>' + fld('number', 'itens', i, 'qtd', it.qtd, 'data-num="1" min="0"') + '</div></div>';
+    h += '<button class="btn-s btn-sm" type="button" data-act="delItem" data-arg="' + i + '" style="margin-top:6px">Remover</button></div>';
+  }
+  $('itens').innerHTML = h || '<p class="hint">Nenhum item cadastrado.</p>';
+}
+
+function renderRituais() {
+  var h = '', el = [], cir = [[1, '1º círculo'], [2, '2º círculo'], [3, '3º círculo'], [4, '4º círculo']];
+  for (var q = 0; q < ELEMENTOS.length; q++) el.push([ELEMENTOS[q], ELEMENTOS[q]]);
+  for (var i = 0; i < ag.rituais.length; i++) {
+    var r = ag.rituais[i];
+    h += '<div class="sub"><div class="row"><label>Nome</label>' + fld('text', 'rituais', i, 'nome', r.nome) + '</div>';
+    h += '<div class="cols"><div><label>Elemento</label>' + sel('rituais', i, 'elemento', r.elemento, el) + '</div>' +
+      '<div><label>Círculo</label>' + sel('rituais', i, 'circulo', r.circulo, cir) + '</div></div>';
+    h += '<div class="cols" style="margin-top:6px"><div><label>PE Base</label>' + fld('number', 'rituais', i, 'cb', r.cb, 'data-num="1"') + '</div>' +
+      '<div><label>PE Discente</label>' + fld('number', 'rituais', i, 'cd', r.cd, 'data-num="1"') + '</div>' +
+      '<div><label>PE Verdadeiro</label>' + fld('number', 'rituais', i, 'cv', r.cv, 'data-num="1"') + '</div></div>';
+    h += '<div style="margin-top:6px">' + area('rituais', i, 'desc', r.desc, 'Efeito, alcance, alvo, resistência...') + '</div>';
+    h += '<div class="btnrow" style="margin-top:6px"><button class="btn-s btn-sm" type="button" data-act="delRit" data-arg="' + i + '">Remover</button></div></div>';
+  }
+  $('rituais').innerHTML = h || '<p class="hint">Nenhum ritual cadastrado.</p>';
+}
+
+function renderPoderes() {
+  var h = '';
+  for (var i = 0; i < ag.poderes.length; i++) {
+    var p = ag.poderes[i];
+    h += '<div class="sub"><div class="row"><label>Poder</label>' + fld('text', 'poderes', i, 'nome', p.nome) + '</div>' +
+      area('poderes', i, 'desc', p.desc, 'Descrição do poder...') +
+      '<div style="margin-top:6px"><button class="btn-s btn-sm" type="button" data-act="delPod" data-arg="' + i + '">Remover</button></div></div>';
+  }
+  $('poderes').innerHTML = h || '<p class="hint">Nenhum poder cadastrado.</p>';
+}
+
+function d20() { return Math.floor(Math.random() * 20) + 1; }
+function testeD20(n) {
+  var qtd = n > 0 ? n : 2, dados = [], i;
+  for (i = 0; i < qtd; i++) dados.push(d20());
+  var usado = n > 0 ? Math.max.apply(null, dados) : Math.min.apply(null, dados);
+  return {dados: dados, usado: usado, modo: n > 0 ? 'maior' : 'menor'};
+}
+
+function rolarExpr(expr, mult) {
+  expr = String(expr).replace(/\s+/g, '').toLowerCase();
+  if (!expr) return null;
+  var re = /([+-]?)(\d*)d(\d+)|([+-]?)(\d+)/g, m, consumido = 0, total = 0, partes = [];
+  while ((m = re.exec(expr)) !== null) {
+    if (m.index !== consumido) return null;
+    consumido += m[0].length;
+    if (m[3] !== undefined && m[3] !== '') {
+      var sinal = m[1] === '-' ? -1 : 1;
+      var q = (m[2] === '' ? 1 : parseInt(m[2], 10)) * (mult || 1), f = parseInt(m[3], 10);
+      var rolls = [], soma = 0;
+      for (var i = 0; i < q; i++) { var r = Math.floor(Math.random() * f) + 1; rolls.push(r); soma += r; }
+      total += sinal * soma;
+      partes.push((sinal < 0 ? '-' : '') + q + 'd' + f + ' [' + rolls.join(', ') + ']');
+    } else {
+      var v = parseInt(m[5], 10) * (m[4] === '-' ? -1 : 1);
+      total += v;
+      partes.push((v >= 0 ? '+' : '') + v);
+    }
+  }
+  if (consumido !== expr.length) return null;
+  return {total: total, texto: partes.join(' ')};
+}
+
+function mostrar(titulo, principal, detalhe, cls, extraHtml) {
+  $('dice-title').textContent = titulo;
+  $('dice-main').textContent = principal;
+  $('dice-main').className = 'dice-main ' + (cls || '');
+  $('dice-detail').innerHTML = detalhe;
+  $('dice-extra').innerHTML = extraHtml || '';
+  logRolagens.unshift(titulo + ' = ' + principal);
+  if (logRolagens.length > 10) logRolagens.pop();
+  var l = '';
+  for (var i = 0; i < logRolagens.length; i++) l += '<div>' + esc(logRolagens[i]) + '</div>';
+  $('dice-log').innerHTML = l;
+  $('dice-sheet').style.display = 'block';
+}
+
+function rolarTeste(titulo, nDados, bonus) {
+  var t = testeD20(nDados), total = t.usado + bonus;
+  var det = t.dados.length + 'd20 [' + t.dados.join(', ') + '] → ' + t.modo + ' <b>' + t.usado + '</b>' + (bonus ? ' ' + (bonus > 0 ? '+' : '') + bonus : '');
+  mostrar(titulo, String(total), det, t.usado === 20 ? 'crit' : '');
+  return t;
+}
+
+function rolarAtaque(i) {
+  var w = ag.armas[i], p = periciaById(w.pericia) || periciaById('luta');
+  var n = ag.attrs[p.a], bonus = perBonus(p.id) + num(w.bonus);
+  var t = testeD20(n), total = t.usado + bonus, margem = num(w.margem) || 20;
+  var ameaca = t.usado >= margem;
+  var det = 'Ataque (' + p.n + ') ' + t.dados.length + 'd20 [' + t.dados.join(', ') + '] → ' + t.modo + ' <b>' + t.usado + '</b> ' + (bonus >= 0 ? '+' : '') + bonus +
+    (ameaca ? '<br><b style="color:var(--gold)">AMEAÇA DE CRÍTICO!</b>' : '');
+  var extra = '<button class="btn-s btn-sm" type="button" data-act="dano" data-arg="' + i + '">Dano</button>' +
+    '<button class="btn-p btn-sm" type="button" data-act="danoCrit" data-arg="' + i + '">Crítico x' + (num(w.mult) || 2) + '</button>';
+  mostrar((w.nome || 'Arma'), String(total), det, ameaca ? 'crit' : '', extra);
+}
+
+function rolarDano(i, crit) {
+  var w = ag.armas[i], mult = crit ? (num(w.mult) || 2) : 1;
+  var r = rolarExpr(w.dano, mult);
+  if (!r) { toast('Fórmula de dano inválida'); return; }
+  mostrar((w.nome || 'Arma') + (crit ? ' (Crítico)' : ''), String(r.total), r.texto, crit ? 'crit' : '');
+}
+
+function aba(nome) {
+  var tabs = document.querySelectorAll('.sheet-tab'), i;
+  for (i = 0; i < tabs.length; i++) tabs[i].className = 'sheet-tab' + (tabs[i].id === 'tab-' + nome ? ' active' : '');
+  var bt = document.querySelectorAll('.tab');
+  for (i = 0; i < bt.length; i++) bt[i].className = 'tab' + (bt[i].getAttribute('data-arg') === nome ? ' active' : '');
+  window.scrollTo(0, 0);
+}
+
+var ACOES = {
+  novo: novoAgente,
+  abrir: function (el) { abrir(el.getAttribute('data-arg')); },
+  excluir: function (el) { excluir(el.getAttribute('data-arg')); },
+  voltar: voltar,
+  salvar: function () { salvarAgora(); toast('Ficha salva'); },
+  aba: function (el) { aba(el.getAttribute('data-arg')); },
+  ajuste: function (el) {
+    var t = el.getAttribute('data-t'), dl = parseInt(el.getAttribute('data-d'), 10), d = derivados();
+    var max = {pv: d.pvMax, pe: d.peMax, san: d.sanMax}[t];
+    ag[t + 'Atual'] = Math.max(0, Math.min(max, ag[t + 'Atual'] + dl));
+    atualizar(); agendarSalvar();
+  },
+  rolarAttr: function (el) {
+    var k = el.getAttribute('data-arg'), n = ag.attrs[k];
+    rolarTeste(ATTR_NOME[k] + ' (' + (n > 0 ? n + 'd20' : '2d20 pior') + ')', n, 0);
+  },
+  rolarPer: function (el) {
+    var p = periciaById(el.getAttribute('data-arg')), b = perBonus(p.id), n = ag.attrs[p.a];
+    rolarTeste(p.n, n, b);
+  },
+  addArma: function () { ag.armas.push({nome: 'Arma', pericia: 'luta', bonus: 0, dano: '1d8', margem: 20, mult: 2, esp: 1}); renderArmas(); atualizar(); agendarSalvar(); },
+  delArma: function (el) { if (confirm('Remover arma?')) { ag.armas.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderArmas(); atualizar(); agendarSalvar(); } },
+  atacar: function (el) { rolarAtaque(parseInt(el.getAttribute('data-arg'), 10)); },
+  dano: function (el) { rolarDano(parseInt(el.getAttribute('data-arg'), 10), false); },
+  danoCrit: function (el) { rolarDano(parseInt(el.getAttribute('data-arg'), 10), true); },
+  addItem: function () { ag.itens.push({nome: 'Item', cat: 0, esp: 1, qtd: 1}); renderItens(); atualizar(); agendarSalvar(); },
+  delItem: function (el) { if (confirm('Remover item?')) { ag.itens.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderItens(); atualizar(); agendarSalvar(); } },
+  addRit: function () { ag.rituais.push({nome: 'Ritual', elemento: 'Sangue', circulo: 1, cb: 1, cd: 3, cv: 6, desc: ''}); renderRituais(); agendarSalvar(); },
+  delRit: function (el) { if (confirm('Remover ritual?')) { ag.rituais.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderRituais(); agendarSalvar(); } },
+  addPod: function () { ag.poderes.push({nome: 'Poder', desc: ''}); renderPoderes(); agendarSalvar(); },
+  delPod: function (el) { if (confirm('Remover poder?')) { ag.poderes.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderPoderes(); agendarSalvar(); } },
+  diceToggle: function () { var s = $('dice-sheet'); s.style.display = s.style.display === 'block' ? 'none' : 'block'; },
+  diceFechar: function () { $('dice-sheet').style.display = 'none'; },
+  rolarLivre: function () {
+    var ex = $('free-expr').value, r = rolarExpr(ex, 1);
+    if (!r) { toast('Fórmula inválida'); return; }
+    mostrar('Rolagem ' + ex, String(r.total), r.texto, '');
+  },
+  rapido: function (el) {
+    var ex = el.getAttribute('data-arg'), r = rolarExpr(ex, 1);
+    $('free-expr').value = ex;
+    mostrar('Rolagem ' + ex, String(r.total), r.texto, '');
+  },
+  backup: function () { $('backup-text').value = JSON.stringify({app: 'grimorio-op', agentes: agentes}, null, 2); $('backup-modal').style.display = 'block'; },
+  bkClose: function () { $('backup-modal').style.display = 'none'; },
+  bkCopy: function () { var t = $('backup-text'); t.select(); document.execCommand('copy'); toast('Copiado'); },
+  bkShare: function () {
+    var txt = JSON.stringify({app: 'grimorio-op', agentes: agentes}, null, 2);
+    if (navigator.share) navigator.share({title: 'Backup', text: txt}).catch(function () {});
+    else ACOES.bkCopy();
+  },
+  bkDownload: function () {
+    var a = document.createElement('a'), url = URL.createObjectURL(new Blob([JSON.stringify({app: 'grimorio-op', agentes: agentes})], {type: 'application/json'}));
+    a.href = url; a.download = 'backup.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  },
+  bkImport: function () {
+    try {
+      var p = JSON.parse($('backup-text').value);
+      agentes = (p.agentes || p).map(normalizar);
+      salvarAgora(); renderLista(); $('backup-modal').style.display = 'none'; toast('Restaurado!');
+    } catch (e) { alert('Erro no JSON'); }
+  }
+};
+
+document.addEventListener('click', function (e) {
+  var el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if (!el) return;
+  var f = ACOES[el.getAttribute('data-act')];
+  if (f) f(el);
+});
+document.addEventListener('input', onField);
+document.addEventListener('change', onField);
+
+var bkFileInput = $('bk-file');
+if (bkFileInput) {
+  bkFileInput.addEventListener('change', function () {
+    var f = this.files && this.files[0]; if (!f) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try {
+        var p = JSON.parse(String(rd.result));
+        agentes = (p.agentes || p).map(normalizar);
+        salvarAgora(); renderLista(); $('backup-modal').style.display = 'none'; toast('Restaurado!');
+      } catch(e) { alert('Erro'); }
+    };
+    rd.readAsText(f);
+    this.value = '';
+  });
+}
+
+agentes = carregar().map(normalizar);
+renderLista();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+})();
+</script>
+</body>
+</html>
