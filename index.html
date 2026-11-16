@@ -222,8 +222,14 @@ textarea{width:100%;height:110px;resize:vertical}
         </div>
       </div>
 
-      <div class="row"><label>Classe</label>
-        <select id="f-classe" data-f="classe"><option value="Combatente">Combatente</option><option value="Especialista">Especialista</option><option value="Ocultista">Ocultista</option></select></div>
+      <div class="row"><label>Classe / Modo</label>
+        <select id="f-classe" data-f="classe">
+          <option value="Combatente">Combatente</option>
+          <option value="Especialista">Especialista</option>
+          <option value="Ocultista">Ocultista</option>
+          <option value="Mundano">Mundano (Civil / Sobrevivente)</option>
+        </select>
+      </div>
       
       <div class="row">
         <label>Trilha</label>
@@ -233,8 +239,23 @@ textarea{width:100%;height:110px;resize:vertical}
         </div>
       </div>
 
-      <div class="row"><label>Patente</label><select id="f-patente" data-f="patente"></select></div>
-      <div class="row"><label>NEX (5% a 99%)</label><input type="number" id="f-nex" data-f="nex" data-n="1" min="5" max="99" step="5"></div>
+      <!-- PATENTE OU ESTÁGIO MUNDANO -->
+      <div class="row" id="row-patente">
+        <label>Patente</label>
+        <select id="f-patente" data-f="patente"></select>
+      </div>
+      <div class="row" id="row-estagio" style="display:none;">
+        <label>Estágio (Sobrevivente)</label>
+        <select id="f-estagio" data-f="estagio">
+          <option value="1">Estágio 1 (Empenho)</option>
+          <option value="2">Estágio 2 (1ª Habilidade de Trilha)</option>
+          <option value="3">Estágio 3 (Aumento de Atributo)</option>
+          <option value="4">Estágio 4 (2ª Habilidade de Trilha)</option>
+          <option value="5">Estágio 5 (Cicatrizado)</option>
+        </select>
+      </div>
+
+      <div class="row" id="row-nex"><label>NEX (5% a 99%)</label><input type="number" id="f-nex" data-f="nex" data-n="1" min="5" max="99" step="5"></div>
       <div class="hint" id="info-nivel"></div>
     </div>
 
@@ -327,7 +348,7 @@ textarea{width:100%;height:110px;resize:vertical}
         <div class="pub-item"><label>Jogador</label><span id="pub-jogador">-</span></div>
         <div class="pub-item"><label>Origem</label><span id="pub-origem">-</span></div>
         <div class="pub-item"><label>Trilha</label><span id="pub-trilha">-</span></div>
-        <div class="pub-item"><label>Patente</label><span id="pub-patente">-</span></div>
+        <div class="pub-item"><label id="pub-lbl-pat">Patente / Estágio</label><span id="pub-patente">-</span></div>
       </div>
       <div class="pub-grid">
         <div class="pub-item"><label>Pontos de Vida (PV)</label><span id="pub-pv">0 / 0</span></div>
@@ -429,11 +450,41 @@ textarea{width:100%;height:110px;resize:vertical}
     </div>
   </div>
 
-  <!-- ABA DIARIO -->
+ <!-- ABA DIARIO -->
   <div id="tab-diario" class="sheet-tab">
+    <div class="card" style="border-color:var(--purple-neon);">
+      <h2>Planejamento &amp; Campanha (Planner)</h2>
+      <div class="hint">Organize suas pistas, alvos e anotações de investigação como um verdadeiro agente da Ordem.</div>
+      
+      <!-- CONTROLE DE SESSÃO -->
+      <div class="cols" style="margin-bottom:10px">
+        <div><label>Sessão Atual</label><input type="text" id="f-sessao" data-f="sessaoCampanha" placeholder="Ex: Sessão 04"></div>
+        <div><label>Localização Atual</label><input type="text" id="f-local" data-f="localCampanha" placeholder="Ex: Matinhos / PR"></div>
+      </div>
+    </div>
+
+    <!-- BLOCO DE PISTAS E ALVOS -->
     <div class="card">
-      <h2>Diário da Investigação</h2>
-      <textarea id="f-diario" data-f="diario" style="height:320px" placeholder="Pistas, segredos, NPCs, histórico da campanha..."></textarea>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="margin:0; border:none; padding:0;">Quadro de Pistas &amp; Alvos</h2>
+        <button class="btn-p btn-sm" type="button" data-act="addPista">+ Pista</button>
+      </div>
+      <div id="pistas-container"></div>
+    </div>
+
+    <!-- CHECKLIST DE TAREFAS / PENDÊNCIAS -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <h2 style="margin:0; border:none; padding:0;">Pendências da Missão</h2>
+        <button class="btn-p btn-sm" type="button" data-act="addTarefa">+ Tarefa</button>
+      </div>
+      <div id="tarefas-container"></div>
+    </div>
+
+    <!-- BLOCO DE ANOTAÇÕES LIVRES (TRADICIONAL) -->
+    <div class="card">
+      <h2>Anotações Livres / Diário de Bordo</h2>
+      <textarea id="f-diario" data-f="diario" style="height:200px" placeholder="Escreva os detalhes aprofundados da investigação..."></textarea>
     </div>
   </div>
 </div>
@@ -518,7 +569,8 @@ var ATTR_NOME = {agi:'Agilidade','for':'Força',int:'Intelecto',pre:'Presença',
 var CLASSES = {
   Combatente:   {pv:[20,4], pe:[2,2], san:[12,3]},
   Especialista: {pv:[16,3], pe:[3,3], san:[16,4]},
-  Ocultista:    {pv:[12,2], pe:[4,4], san:[20,5]}
+  Ocultista:    {pv:[12,2], pe:[4,4], san:[20,5]},
+  Mundano:      {pv:[8,2],  pe:[2,1], san:[8,2]}
 };
 var PATENTES = [
   {n:'Recruta', cred:'Baixo', pp:0, lim:[2,0,0,0]},
@@ -528,7 +580,6 @@ var PATENTES = [
   {n:'Agente de Elite', cred:'Ilimitado', pp:200, lim:[3,3,3,2]}
 ];
 
-// BANCO DE DADOS DE ORIGENS (46 OPÇÕES)
 var ORIGENS_DB = {
   "Acadêmico": {desc: "Pesquisador ou professor universitário cujos estudos tocaram em assuntos misteriosos.", per:"Ciências e Investigação", pod:"Saber é Poder: Gastar 2 PE para +5 em teste de Intelecto."},
   "Agente de Saúde": {desc: "Profissional da saúde treinado no atendimento e cuidado de pessoas.", per:"Intuição e Medicina", pod:"Técnica Medicinal: Adiciona Intelecto ao total de PV curados."},
@@ -579,7 +630,6 @@ var ORIGENS_DB = {
   "Repórter Investigativo": {desc: "Jornalista com compromisso com a verdade.", per:"Atualidades e Investigação", pod:"Encontrar a Verdade: Usa Investigação para persuadir; gastar 2 PE para +5."}
 };
 
-// BANCO DE DADOS DE TRILHAS POR CLASSE
 var TRILHAS_DB = {
   "Combatente": {
     "Aniquilador": {desc: "Focado em abater alvos com eficiência máxima utilizando arma predileta.", habs: "10% A Favorita | 40% Técnica Secreta | 65% Técnica Sublime | 99% Máquina de Matar."},
@@ -610,10 +660,14 @@ var TRILHAS_DB = {
     "Exorcista": {desc: "Sacerdote ou combatente de fé que expurga entidades.", habs: "10% Revelação do Mal | 40% Poder da Fé | 65% Parareligiosidade | 99% Expurgar o Outro Lado."},
     "Parapsicólogo": {desc: "Estudioso da psique humana que trata o trauma paranormal.", habs: "10% Terapia | 40% Palavras-chave | 65% Desrepressão | 99% A Sanidade Está Lá Fora."},
     "Possuído": {desc: "Carrega uma entidade em sua essência, canalizando possessão.", habs: "10% Poder Não Desejado | 40% Vontade Compartilhada | 65% Ele Me Ensina | 99% Tornamo-nos Um."}
+  },
+  "Mundano": {
+    "Durão": {desc: "Resiliente a traumas físicos, ganha PV extras e bônus de combate físico.", habs: "Estágio 2: +4 PV imediatos | Estágio 4: Pancada Forte (gastar 1 PE para +1d20 em ataque)."},
+    "Esperto": {desc: "Versátil e astuto, ganha perícias e facilidade em testes utilitários.", habs: "Estágio 2: Treinamento em perícia adicional | Estágio 4: Entendido (gastar 1 PE para +1d4 em perícia)."},
+    "Esotérico": {desc: "Possui sensibilidade ao oculto e vislumbres paranormais.", habs: "Estágio 2: Sentir energias paranormais | Estágio 4: Iniciado (aprende ritual de 1º círculo)."}
   }
 };
 
-// CATÁLOGO COMPLETO DE PODERES PARA SELEÇÃO AUTOMÁTICA
 var PODERES_CATALOGO = {
   "classe": {
     "Combatente": {
@@ -680,6 +734,16 @@ var PODERES_CATALOGO = {
       "Nos Olhos do Monstro (SaH)": "Gasta 3 PE encarando criatura para +5 em testes contra ela na cena.",
       "Olhar Sinistro (SaH)": "Usa Presença em vez de Intelecto em Ocultismo e coage com Ocultismo.",
       "Sentido Premonitório (SaH)": "Gasta 3 PE para antecipar eventos de investigação e ações inimigas."
+    },
+    "Mundano": {
+      "Empenho (Estágio 1)": "Gasta 1 PE para receber +2 em um teste de perícia.",
+      "Durão (Estágio 2)": "Recebe +4 PV imediatos e mais +2 PV ao avançar para o 3º estágio.",
+      "Esperto (Estágio 2)": "Torna-se treinado em uma perícia adicional à sua escolha.",
+      "Esotérico (Estágio 2)": "Pode gastar 1 PE e ação padrão para sentir energias paranormais em alcance curto.",
+      "Pancada Forte (Estágio 4)": "Ao realizar um ataque, gasta 1 PE para receber +1d20 no teste de ataque.",
+      "Entendido (Estágio 4)": "Escolhe duas perícias treinadas; gasta 1 PE para somar +1d4 no resultado.",
+      "Iniciado (Estágio 4)": "Aprende e pode conjurar um ritual de 1º círculo à sua escolha.",
+      "Cicatrizado (Estágio 5)": "Sofre -1d20 contra um perigo específico, mas 1x/sessão pode sacrificar PV/PE permanente para mitigar dano."
     }
   },
   "gerais": {
@@ -827,7 +891,14 @@ function popularSubPoderes() {
 function normalizar(a) {
   if (!a.id) a.id = 'ag_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
   if (!CLASSES[a.classe]) a.classe = 'Combatente';
-  a.nex = Math.max(5, Math.min(99, parseInt(a.nex, 10) || 5));
+  
+  if (a.classe === 'Mundano') {
+    a.nex = 0;
+    if (!a.estagio) a.estagio = 1;
+  } else {
+    a.nex = Math.max(5, Math.min(99, parseInt(a.nex, 10) || 5));
+  }
+
   if (!a.attrs) a.attrs = {};
   ['agi', 'for', 'int', 'pre', 'vig'].forEach(function (k) { a.attrs[k] = parseInt(a.attrs[k], 10); if (isNaN(a.attrs[k])) a.attrs[k] = 1; });
   if (!a.bonus) a.bonus = {};
@@ -854,13 +925,27 @@ function patenteDe(a) { for (var i = 0; i < PATENTES.length; i++) if (PATENTES[i
 
 function derivados() {
   var c = CLASSES[ag.classe], at = ag.attrs, b = ag.bonus;
-  var nivel = nivelDe(ag.nex), passos = nivel - 1;
-  var d = {nivel: nivel};
-  d.pvMax = c.pv[0] + at.vig + passos * (c.pv[1] + at.vig) + b.pv;
-  d.peMax = c.pe[0] + at.pre + passos * (c.pe[1] + at.pre) + b.pe;
-  d.sanMax = c.san[0] + passos * c.san[1] + b.san;
-  d.limPE = nivel;
-  d.dt = 10 + nivel + at.pre;
+  var d = {};
+  
+  if (ag.classe === 'Mundano') {
+    var est = parseInt(ag.estagio, 10) || 1;
+    // Sobrevivente: PV = 8+Vig + 2 por estágio extra; PE = 2+Pre + 1 por estágio extra; SAN = 8 + 2 por estágio extra
+    d.pvMax = (8 + at.vig) + (est - 1) * 2 + b.pv;
+    d.peMax = (2 + at.pre) + (est - 1) * 1 + b.pe;
+    d.sanMax = 8 + (est - 1) * 2 + b.san;
+    d.limPE = 1;
+    d.dt = 10 + 1 + at.pre;
+    d.nivel = est;
+  } else {
+    var nivel = nivelDe(ag.nex), passos = nivel - 1;
+    d.nivel = nivel;
+    d.pvMax = c.pv[0] + at.vig + passos * (c.pv[1] + at.vig) + b.pv;
+    d.peMax = c.pe[0] + at.pre + passos * (c.pe[1] + at.pre) + b.pe;
+    d.sanMax = c.san[0] + passos * c.san[1] + b.san;
+    d.limPE = nivel;
+    d.dt = 10 + nivel + at.pre;
+  }
+
   var defProt = ag.protecao === 'leve' ? 5 : (ag.protecao === 'pesada' ? 10 : 0);
   var rdProt = ag.protecao === 'pesada' ? 2 : 0;
   d.def = 10 + at.agi + defProt + (ag.escudo ? 2 : 0) + b.def;
@@ -886,7 +971,8 @@ function renderLista() {
   var h = '';
   for (var i = 0; i < agentes.length; i++) {
     var a = agentes[i];
-    h += '<div class="agent"><div><h3>' + esc(a.nome || 'Agente sem nome') + '</h3><p>' + esc(a.classe) + ' · NEX ' + esc(a.nex) + '% · ' + esc(a.patente) + '</p></div>' +
+    var subtitulo = a.classe === 'Mundano' ? 'Mundano · Estágio ' + (a.estagio || 1) : a.classe + ' · NEX ' + a.nex + '% · ' + a.patente;
+    h += '<div class="agent"><div><h3>' + esc(a.nome || 'Agente sem nome') + '</h3><p>' + subtitulo + '</p></div>' +
       '<div class="btnrow" style="margin:0"><button class="btn-p" type="button" data-act="abrir" data-arg="' + esc(a.id) + '">Abrir</button>' +
       '<button class="btn-s" type="button" data-act="excluir" data-arg="' + esc(a.id) + '">Excluir</button></div></div>';
   }
@@ -941,6 +1027,18 @@ function preencherForm() {
     var e = els[j], k = e.getAttribute('data-f');
     if (e.type === 'checkbox') e.checked = !!ag[k]; else e.value = ag[k];
   }
+  
+  if (ag.classe === 'Mundano') {
+    $('row-patente').style.display = 'none';
+    $('row-nex').style.display = 'none';
+    $('row-estagio').style.display = 'flex';
+    $('f-estagio').value = ag.estagio || 1;
+  } else {
+    $('row-patente').style.display = 'flex';
+    $('row-nex').style.display = 'flex';
+    $('row-estagio').style.display = 'none';
+  }
+
   var at = ['agi', 'for', 'int', 'pre', 'vig'];
   for (j = 0; j < at.length; j++) $('a-' + at[j]).value = ag.attrs[at[j]];
   var bs = ['def', 'rd', 'pv', 'pe', 'san'];
@@ -980,7 +1078,12 @@ function atualizar() {
   if (!est) est = '<span class="chip chip-ok">Estável / Sã Consciência</span>';
   $('estados').innerHTML = est;
 
-  $('info-nivel').textContent = 'NEX ' + ag.nex + '% = nível ' + d.nivel + ' · limite de PE/turno: ' + d.limPE + ' · DT: ' + d.dt;
+  if (ag.classe === 'Mundano') {
+    $('info-nivel').textContent = 'Modo Mundano · Estágio ' + (ag.estagio || 1) + ' · Limite de PE/turno: 1 · DT: ' + d.dt;
+  } else {
+    $('info-nivel').textContent = 'NEX ' + ag.nex + '% = nível ' + d.nivel + ' · limite de PE/turno: ' + d.limPE + ' · DT: ' + d.dt;
+  }
+
   $('d-def').textContent = d.def;
   $('d-esq').textContent = d.esq;
   $('d-blo').textContent = d.blo + (d.rd ? ' (+RD ' + d.rd + ')' : '');
@@ -988,15 +1091,20 @@ function atualizar() {
   var pat = patenteDe(ag);
   $('c-uso').textContent = d.cargaUso;
   $('c-max').textContent = d.cargaMax;
-  $('c-cred').textContent = pat.cred;
+  $('c-cred').textContent = ag.classe === 'Mundano' ? 'Baixo (Civil)' : pat.cred;
   $('c-status').innerHTML = d.cargaUso > d.cargaMax ? '<span class="chip chip-red">SOBRECARREGADO</span>' : '<span class="chip chip-ok">Carga OK</span>';
   
   $('pub-nome').textContent = ag.nome || 'Agente Sem Nome';
-  $('pub-subdet').textContent = esc(ag.classe) + (ag.trilha ? ' (' + esc(ag.trilha) + ')' : '') + ' · NEX ' + ag.nex + '%';
-  $('pub-jogador').textContent = ag.jogador || '-';
-  $('pub-origem').textContent = ag.origem || '-';
-  $('pub-trilha').textContent = ag.trilha || '-';
-  $('pub-patente').textContent = ag.patente;
+  if (ag.classe === 'Mundano') {
+    $('pub-subdet').textContent = 'Mundano / Sobrevivente' + (ag.trilha ? ' (' + esc(ag.trilha) + ')' : '') + ' · Estágio ' + (ag.estagio || 1);
+    $('pub-lbl-pat').textContent = 'Estágio';
+    $('pub-patente').textContent = 'Estágio ' + (ag.estagio || 1);
+  } else {
+    $('pub-subdet').textContent = esc(ag.classe) + (ag.trilha ? ' (' + esc(ag.trilha) + ')' : '') + ' · NEX ' + ag.nex + '%';
+    $('pub-lbl-pat').textContent = 'Patente';
+    $('pub-patente').textContent = ag.patente;
+  }
+
   $('pub-pv').textContent = ag.pvAtual + ' / ' + d.pvMax;
   $('pub-pe').textContent = ag.peAtual + ' / ' + d.peMax;
   $('pub-san').textContent = ag.sanAtual + ' / ' + d.sanMax;
@@ -1043,9 +1151,27 @@ function onField(e) {
     ag[f] = v;
 
     if (f === 'classe') {
+      if (v === 'Mundano') {
+        ag.nex = 0;
+        ag.estagio = 1;
+        $('row-patente').style.display = 'none';
+        $('row-nex').style.display = 'none';
+        $('row-estagio').style.display = 'flex';
+      } else {
+        ag.nex = 5;
+        delete ag.estagio;
+        $('row-patente').style.display = 'flex';
+        $('row-nex').style.display = 'flex';
+        $('row-estagio').style.display = 'none';
+      }
       atualizarTrilhasSelect();
       popularSubPoderes();
       ag.trilha = '';
+    }
+
+    if (f === 'estagio') {
+      ag.estagio = parseInt(v, 10) || 1;
+      atualizar();
     }
 
     if (f === 'nome') $('sheet-title').textContent = v || 'Ficha';
@@ -1114,12 +1240,50 @@ function area(lista, i, k, val, ph) {
 
 function renderArmas() {
   var h = '';
+  // Lista de todas as perícias do sistema para o seletor de ataque da arma
+  var opcoesPericias = [
+    {id:'luta', n:'Luta (FOR)'},
+    {id:'pontaria', n:'Pontaria (AGI)'},
+    {id:'ocultismo', n:'Ocultismo (INT) [Lâmina Paranormal]'},
+    {id:'tecnologia', n:'Tecnologia (INT) [Motor de Busca]'},
+    {id:'enganacao', n:'Enganação (PRE) [Impostor]'},
+    {id:'acrobacia', n:'Acrobacia (AGI)'},
+    {id:'adestramento', n:'Adestramento (PRE)'},
+    {id:'artes', n:'Artes (PRE)'},
+    {id:'atletismo', n:'Atletismo (FOR)'},
+    {id:'atualidades', n:'Atualidades (INT)'},
+    {id:'ciencias', n:'Ciências (INT)'},
+    {id:'crime', n:'Crime (AGI)'},
+    {id:'diplomacia', n:'Diplomacia (PRE)'},
+    {id:'fortitude', n:'Fortitude (VIG)'},
+    {id:'furtividade', n:'Furtividade (AGI)'},
+    {id:'iniciativa', n:'Iniciativa (AGI)'},
+    {id:'intimidacao', n:'Intimidação (PRE)'},
+    {id:'intuicao', n:'Intuição (PRE)'},
+    {id:'investigacao', n:'Investigação (INT)'},
+    {id:'medicina', n:'Medicina (INT)'},
+    {id:'percepcao', n:'Percepção (PRE)'},
+    {id:'pilotagem', n:'Pilotagem (AGI)'},
+    {id:'profissao', n:'Profissão (INT)'},
+    {id:'reflexos', n:'Reflexos (AGI)'},
+    {id:'religiao', n:'Religião (PRE)'},
+    {id:'sobrevivencia', n:'Sobrevivência (INT)'},
+    {id:'tatica', n:'Tática (INT)'},
+    {id:'vontade', n:'Vontade (PRE)'}
+  ];
+
   for (var i = 0; i < ag.armas.length; i++) {
     var w = ag.armas[i];
+    var selOpts = '';
+    for (var op = 0; op < opcoesPericias.length; op++) {
+      var sel = (w.pericia === opcoesPericias[op].id) ? ' selected' : '';
+      selOpts += '<option value="' + opcoesPericias[op].id + '"' + sel + '>' + opcoesPericias[op].n + '</option>';
+    }
+
     h += '<div class="sub">';
     h += '<div class="row"><label>Nome</label>' + fld('text', 'armas', i, 'nome', w.nome) + '</div>';
     h += '<div class="cols">';
-    h += '<div><label>Perícia</label>' + sel('armas', i, 'pericia', w.pericia, [['luta', 'Luta'], ['pontaria', 'Pontaria']]) + '</div>';
+    h += '<div><label>Perícia de Ataque</label><select data-l="armas" data-i="' + i + '" data-k="pericia">' + selOpts + '</select></div>';
     h += '<div><label>Bônus ataque</label>' + fld('number', 'armas', i, 'bonus', w.bonus, 'data-num="1"') + '</div>';
     h += '<div><label>Dano</label>' + fld('text', 'armas', i, 'dano', w.dano, 'autocapitalize="off"') + '</div>';
     h += '</div><div class="cols" style="margin-top:6px">';
@@ -1134,6 +1298,41 @@ function renderArmas() {
     h += '</div>';
   }
   $('armas').innerHTML = h || '<p class="hint">Nenhuma arma cadastrada.</p>';
+}
+
+// Renderizar Quadro de Pistas
+function renderPistas() {
+  if (!ag) return;
+  if (!Array.isArray(ag.pistas)) ag.pistas = [];
+  var h = '';
+  for (var i = 0; i < ag.pistas.length; i++) {
+    var p = ag.pistas[i];
+    h += '<div class="sub" style="border-left: 3px solid var(--purple-neon); margin-bottom:8px;">';
+    h += '<div class="cols"><div><label>Alvo / Pista</label><input type="text" value="' + esc(p.titulo) + '" data-l="pistas" data-i="' + i + '" data-k="titulo" placeholder="Ex: Culto em Matinhos"></div>';
+    h += '<div><label>Status</label><select data-l="pistas" data-i="' + i + '" data-k="status"><option value="Em Investigação"' + (p.status === 'Em Investigação' ? ' selected' : '') + '>Em Investigação</option><option value="Confirmado"' + (p.status === 'Confirmado' ? ' selected' : '') + '>Confirmado</option><option value="Eliminado"' + (p.status === 'Eliminado' ? ' selected' : '') + '>Eliminado</option></select></div></div>';
+    h += '<div style="margin-top:6px"><label style="font-size:0.75rem; color:var(--muted)">Detalhes</label><input type="text" value="' + esc(p.detalhes) + '" data-l="pistas" data-i="' + i + '" data-k="detalhes" placeholder="Detalhes rápidos..."></div>';
+    h += '<button class="btn-s btn-sm" type="button" data-act="delPista" data-arg="' + i + '" style="margin-top:6px">Remover Pista</button>';
+    h += '</div>';
+  }
+  var box = $('pistas-container');
+  if (box) box.innerHTML = h || '<p class="hint">Nenhuma pista registrada no quadro.</p>';
+}
+
+// Renderizar Tarefas
+function renderTarefas() {
+  if (!ag) return;
+  if (!Array.isArray(ag.tarefas)) ag.tarefas = [];
+  var h = '';
+  for (var i = 0; i < ag.tarefas.length; i++) {
+    var tf = ag.tarefas[i];
+    h += '<div class="row" style="background:var(--input); padding:8px; border-radius:8px; margin-bottom:6px; align-items:center;">';
+    h += '<input type="checkbox"' + (tf.feito ? ' checked' : '') + ' data-l="tarefas" data-i="' + i + '" data-k="feito" style="width:24px; height:24px; margin-right:8px;">';
+    h += '<input type="text" value="' + esc(tf.texto) + '" data-l="tarefas" data-i="' + i + '" data-k="texto" placeholder="Ex: Falar com o contato no porto..." style="border:none; background:transparent; font-size:0.9rem;">';
+    h += '<button class="btn-s btn-sm" type="button" data-act="delTarefa" data-arg="' + i + '" style="padding:2px 8px; font-size:12px;">X</button>';
+    h += '</div>';
+  }
+  var box = $('tarefas-container');
+  if (box) box.innerHTML = h || '<p class="hint">Nenhuma pendência na lista.</p>';
 }
 
 function renderItens() {
@@ -1269,6 +1468,24 @@ var ACOES = {
     var max = {pv: d.pvMax, pe: d.peMax, san: d.sanMax}[t];
     ag[t + 'Atual'] = Math.max(0, Math.min(max, ag[t + 'Atual'] + dl));
     atualizar(); agendarSalvar();
+  },
+  addPista: function () {
+    if (!ag.pistas) ag.pistas = [];
+    ag.pistas.push({titulo: '', status: 'Em Investigação', detalhes: ''});
+    renderPistas(); agendarSalvar();
+  },
+  delPista: function (el) {
+    ag.pistas.splice(parseInt(el.getAttribute('data-arg'), 10), 1);
+    renderPistas(); agendarSalvar();
+  },
+  addTarefa: function () {
+    if (!ag.tarefas) ag.tarefas = [];
+    ag.tarefas.push({texto: '', feito: false});
+    renderTarefas(); agendarSalvar();
+  },
+  delTarefa: function (el) {
+    ag.tarefas.splice(parseInt(el.getAttribute('data-arg'), 10), 1);
+    renderTarefas(); agendarSalvar();
   },
   rolarAttr: function (el) {
     var k = el.getAttribute('data-arg'), n = ag.attrs[k];
