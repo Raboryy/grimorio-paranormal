@@ -35,7 +35,7 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 header h1{font-size:1.15rem;color:var(--purple-neon);text-transform:uppercase;letter-spacing:1.5px;flex:1;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 8px;text-shadow:0 0 8px rgba(192,132,252,0.4)}
 
 button,select,input,textarea{background:var(--input);color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:8px;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
-select{background-image:none;padding-right:8px}
+select{background-image:none;padding-right:8px;width:100%;text-overflow:ellipsis}
 button{font-weight:bold;min-height:44px;cursor:pointer;transition:all 0.2s}
 button:active{opacity:.8;transform:scale(0.98)}
 
@@ -52,6 +52,9 @@ button:active{opacity:.8;transform:scale(0.98)}
 .row>label{flex:1;font-size:.9rem;color:var(--muted);padding-right:8px}
 .row>input,.row>select{flex:2;min-width:0}
 .row>input[type=checkbox]{flex:none;width:28px;height:28px;accent-color:var(--purple-mid)}
+
+.input-group{display:flex;flex:2;gap:6px}
+.input-group select{flex:1;min-width:0}
 
 .btnrow{display:flex;flex-wrap:wrap}
 .btnrow>*{margin-right:6px;margin-bottom:6px}
@@ -200,7 +203,7 @@ textarea{width:100%;height:110px;resize:vertical}
     <button class="tab" type="button" data-act="aba" data-arg="publicada">Visão Geral</button>
     <button class="tab" type="button" data-act="aba" data-arg="pericias">Perícias</button>
     <button class="tab" type="button" data-act="aba" data-arg="inv">Inventário</button>
-    <button class="tab" type="button" data-act="aba" data-arg="rituais">Rituais</button>
+    <button class="tab" type="button" data-act="aba" data-arg="rituais">Rituais &amp; Poderes</button>
     <button class="tab" type="button" data-act="aba" data-arg="diario">Diário</button>
   </div>
 
@@ -210,10 +213,26 @@ textarea{width:100%;height:110px;resize:vertical}
       <h2>Identidade do Agente</h2>
       <div class="row"><label>Nome</label><input type="text" id="f-nome" data-f="nome"></div>
       <div class="row"><label>Jogador</label><input type="text" id="f-jogador" data-f="jogador"></div>
-      <div class="row"><label>Origem</label><input type="text" id="f-origem" data-f="origem"></div>
+      
+      <div class="row">
+        <label>Origem</label>
+        <div class="input-group">
+          <select id="f-origem" data-f="origem"></select>
+          <button class="btn-s btn-sm" type="button" data-act="infoOrigem" style="min-width:44px">?</button>
+        </div>
+      </div>
+
       <div class="row"><label>Classe</label>
-        <select id="f-classe" data-f="classe"><option>Combatente</option><option>Especialista</option><option>Ocultista</option></select></div>
-      <div class="row"><label>Trilha</label><input type="text" id="f-trilha" data-f="trilha"></div>
+        <select id="f-classe" data-f="classe"><option value="Combatente">Combatente</option><option value="Especialista">Especialista</option><option value="Ocultista">Ocultista</option></select></div>
+      
+      <div class="row">
+        <label>Trilha</label>
+        <div class="input-group">
+          <select id="f-trilha" data-f="trilha"></select>
+          <button class="btn-s btn-sm" type="button" data-act="infoTrilha" style="min-width:44px">?</button>
+        </div>
+      </div>
+
       <div class="row"><label>Patente</label><select id="f-patente" data-f="patente"></select></div>
       <div class="row"><label>NEX (5% a 99%)</label><input type="number" id="f-nex" data-f="nex" data-n="1" min="5" max="99" step="5"></div>
       <div class="hint" id="info-nivel"></div>
@@ -297,7 +316,7 @@ textarea{width:100%;height:110px;resize:vertical}
     </div>
   </div>
 
-  <!-- ABA VISÃO GERAL (PUBLICADA / IMPRESSA JUNTAS) -->
+  <!-- ABA VISÃO GERAL -->
   <div id="tab-publicada" class="sheet-tab">
     <div class="published-sheet">
       <div class="pub-header">
@@ -371,7 +390,7 @@ textarea{width:100%;height:110px;resize:vertical}
     </div>
   </div>
 
-  <!-- ABA RITUAIS -->
+  <!-- ABA RITUAIS & PODERES -->
   <div id="tab-rituais" class="sheet-tab">
     <div class="card">
       <h2>Grimório de Rituais</h2>
@@ -384,9 +403,28 @@ textarea{width:100%;height:110px;resize:vertical}
       <button class="btn-p" type="button" data-act="addRit" style="margin-bottom:10px">+ Adicionar Ritual</button>
       <div id="rituais"></div>
     </div>
+
+    <!-- PAINEL DE ADICIONAR PODERES AUTOMÁTICOS -->
+    <div class="card" style="border-color: var(--purple-neon);">
+      <h2>Adicionar Poderes e Habilidades Rápidas</h2>
+      <div class="row">
+        <label>Categoria</label>
+        <select id="sel-cat-poder">
+          <option value="classe">Poderes de Classe</option>
+          <option value="gerais">Poderes Gerais</option>
+          <option value="paranormais">Poderes Paranormais</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Selecionar Poder</label>
+        <select id="sel-lista-poder"></select>
+      </div>
+      <button class="btn-p" type="button" data-act="adicionarPoderCatalogo" style="width:100%">+ Adicionar Poder Selecionado</button>
+    </div>
+
     <div class="card">
-      <h2>Poderes e Habilidades</h2>
-      <button class="btn-p" type="button" data-act="addPod" style="margin-bottom:10px">+ Adicionar Poder</button>
+      <h2>Poderes e Habilidades Atuais</h2>
+      <button class="btn-s" type="button" data-act="addPod" style="margin-bottom:10px">+ Adicionar Poder Personalizado</button>
       <div id="poderes"></div>
     </div>
   </div>
@@ -402,6 +440,15 @@ textarea{width:100%;height:110px;resize:vertical}
 </div>
 
 <button id="dice-fab" type="button" data-act="diceToggle">&#127922;</button>
+
+<!-- MODAL DE INFORMAÇÕES -->
+<div id="info-modal" class="modal">
+  <div class="card">
+    <h2 id="info-modal-title" style="color:var(--purple-neon)">Informação</h2>
+    <div id="info-modal-body" style="font-size:0.9rem; color:var(--text); line-height:1.5; margin: 12px 0;"></div>
+    <button class="btn-p" type="button" data-act="fecharInfo" style="width:100%">Fechar</button>
+  </div>
+</div>
 
 <div id="dice-sheet">
   <div class="btnrow" style="justify-content:space-between;margin-bottom:0">
@@ -480,8 +527,210 @@ var PATENTES = [
   {n:'Oficial de Operações', cred:'Alto', pp:100, lim:[3,3,2,1]},
   {n:'Agente de Elite', cred:'Ilimitado', pp:200, lim:[3,3,3,2]}
 ];
-var ELEMENTOS = ['Sangue', 'Morte', 'Conhecimento', 'Energia', 'Medo'];
-var CUSTO_CIRC = [0, 1, 3, 6, 10];
+
+// BANCO DE DADOS DE ORIGENS (46 OPÇÕES)
+var ORIGENS_DB = {
+  "Acadêmico": {desc: "Pesquisador ou professor universitário cujos estudos tocaram em assuntos misteriosos.", per:"Ciências e Investigação", pod:"Saber é Poder: Gastar 2 PE para +5 em teste de Intelecto."},
+  "Agente de Saúde": {desc: "Profissional da saúde treinado no atendimento e cuidado de pessoas.", per:"Intuição e Medicina", pod:"Técnica Medicinal: Adiciona Intelecto ao total de PV curados."},
+  "Amnésico": {desc: "Perdeu a maior parte da memória devido a um trauma paranormal ou ritual.", per:"Duas à escolha do mestre", pod:"Vislumbres do Passado: 1x/sessão teste de Int (DT 10) para reconhecer lugares/pessoas, recupera 1d4 PE."},
+  "Artista": {desc: "Ator, músico, escritor ou influenciador inspirado por experiências com o Outro Lado.", per:"Artes e Enganação", pod:"Magnum Opus: 1x/missão recebe +5 em Presença em cena de interação."},
+  "Atleta": {desc: "Competidor esportivo com grande aptidão física.", per:"Acrobacia e Atletismo", pod:"110%: Gastar 2 PE para +5 em teste de Força ou Agilidade."},
+  "Chef": {desc: "Cozinheiro amador ou profissional cujos pratos alimentam e motivam a equipe.", per:"Fortitude e Profissão (cozinheiro)", pod:"Ingrediente Secreto: No interlúdio, prato especial fornece o benefício de dois pratos."},
+  "Criminoso": {desc: "Vivia fora da lei antes de ser recrutado pela Ordem.", per:"Crime e Furtividade", pod:"O Crime Compensa: Inclui 1 item achado na missão anterior sem contar no limite."},
+  "Cultista Arrependido": {desc: "Fez parte de um culto paranormal e agora luta ao lado da Ordem.", per:"Ocultismo e Religião", pod:"Traços do Outro Lado: Começa com 1 poder paranormal, mas com metade da Sanidade."},
+  "Desgarrado": {desc: "Eremita ou morador de rua que abandonou os confortos da sociedade.", per:"Fortitude e Sobrevivência", pod:"Calejado: Recebe +1 PV para cada 5% de NEX."},
+  "Engenheiro": {desc: "Aplica seus conhecimentos criando ou modificando dispositivos.", per:"Profissão e Tecnologia", pod:"Ferramenta Favorita: 1 item (exceto armas) conta como uma categoria abaixo."},
+  "Executivo": {desc: "Trabalhador corporativo habituado a burocracia e contratos.", per:"Diplomacia e Profissão", pod:"Processo Otimizado: Gastar 2 PE para +5 em testes estendidos ou revisar documentos."},
+  "Investigador": {desc: "Perito forense ou detetive particular com olho clínico para pistas.", per:"Investigação e Percepção", pod:"Faro para Pistas: 1x/cena, gastar 1 PE para +5 ao procurar pistas."},
+  "Lutador": {desc: "Praticante de artes marciais ou brigão de rua.", per:"Luta e Reflexos", pod:"Mão Pesada: Recebe +2 em rolagens de dano corpo a corpo."},
+  "Magnata": {desc: "Dono de grande fortuna que financia a Ordo Realitas.", per:"Diplomacia e Pilotagem", pod:"Patrocinador da Ordem: Crédito considerado um nível acima."},
+  "Mercenário": {desc: "Soldado de aluguel focado em contratos armados e escoltas.", per:"Iniciativa e Intimidação", pod:"Posição de Combate: 1º turno, gastar 2 PE para ação de movimento extra."},
+  "Militar": {desc: "Treinado em forças armadas com rigorosa disciplina tática.", per:"Pontaria e Tática", pod:"Para Bellum: Recebe +2 em dano com armas de fogo."},
+  "Operário": {desc: "Trabalhador braçal pragmático com grande força física.", per:"Fortitude e Profissão", pod:"Ferramenta de Trabalho: Proficiência e +1 em arma usada como ferramenta."},
+  "Policial": {desc: "Membro de corporações policiais habituado com ameaças urbanas.", per:"Percepção e Pontaria", pod:"Patrulha: Recebe +2 na Defesa."},
+  "Religioso": {desc: "Sacerdote ou devoto focado no amparo espiritual.", per:"Religião e Vontade", pod:"Acalentar: +5 em Religião para acalmar; recupera Sanidade."},
+  "Servidor Público": {desc: "Funcionário governamental acostumado a auxiliar terceiros.", per:"Intuição e Vontade", pod:"Espírito Cívico: Gastar 1 PE para aumentar bônus de ajuda em +2."},
+  "Teórico da Conspiração": {desc: "Investigador de sociedades secretas e forças ocultas.", per:"Investigação e Ocultismo", pod:"Eu Já Sabia: Recebe RD mental igual ao Intelecto."},
+  "T.I.": {desc: "Programador ou técnico habituado a manipular ambientes digitais.", per:"Investigação e Tecnologia", pod:"Motor de Busca: Gastar 2 PE para substituir qualquer perícia por Tecnologia com internet."},
+  "Trabalhador Rural": {desc: "Trabalhador do campo adaptado à vida ao ar livre.", per:"Adestramento e Sobrevivência", pod:"Desbravador: Gastar 2 PE para +5 em Adestramento/Sobrevivência, sem redutor em terreno difícil."},
+  "Trambiqueiro": {desc: "Especialista em malandragem e pequenos golpes.", per:"Crime e Enganação", pod:"Impostor: 1x/cena, gastar 2 PE para substituir perícia por Enganação."},
+  "Universitário": {desc: "Estudante focado em rotina de estudos intensos.", per:"Atualidades e Investigação", pod:"Dedicação: Recebe +1 PE (e por NEX ímpar) e +1 limite de PE por turno."},
+  "Vítima": {desc: "Sobrevivente de um ataque ou ritual paranormal no passado.", per:"Reflexos e Vontade", pod:"Cicatrizes Psicológicas: Recebe +1 de Sanidade para cada 5% de NEX."},
+  // Sobrevivendo ao Horror
+  "Amigo dos Animais": {desc: "Criou laço profundo com animais e sua percepção aguçada.", per:"Adestramento e Percepção", pod:"Companheiro Animal: Possui animal de estimação aliado."},
+  "Astronauta": {desc: "Explorador espacial acostumado a ambientes extremos.", per:"Ciências e Fortitude", pod:"Acostumado ao Extremo: Gastar 1 PE para reduzir dano de fogo, frio ou mental em 5."},
+  "Chef do Outro Lado": {desc: "Cozinha e ingere elementos do Outro Lado.", per:"Ocultismo e Profissão (cozinheiro)", pod:"Fome do Outro Lado: Extrai ingredientes de criaturas para pratos com RD."},
+  "Colegial": {desc: "Estudante jovem que descobriu a força dos laços e amizades.", per:"Atualidades e Tecnologia", pod:"Poder da Amizade: +2 em testes se estiver próximo ao melhor amigo."},
+  "Cosplayer": {desc: "Artistas dedicados à confecção de trajes e disfarces.", per:"Artes e Vontade", pod:"Não É Fantasia, É Cosplay!: Usa Artes no lugar de Enganação e +2 com temática."},
+  "Diplomata": {desc: "Atuava com negociações políticas ou corporativas.", per:"Atualidades e Diplomacia", pod:"Conexões: +2 em Diplomacia e troca de teste via contato."},
+  "Explorador": {desc: "Viajante e aventureiro com corpo condicionado a terrenos hostis.", per:"Fortitude e Sobrevivência", pod:"Manual do Sobrevivente: Gastar 2 PE para +5 em resistências contra clima, veneno, fome."},
+  "Experimento": {desc: "Cobaia de experimentos físicos ou rituais.", per:"Atletismo e Fortitude", pod:"Mutação: RD 2 e +2 em perícia física, mas -1d20 em Diplomacia."},
+  "Fanático por Criaturas": {desc: "Caçador de monstros urbano colecionador de mitos.", per:"Investigação e Ocultismo", pod:"Conhecimento Oculto: Usa Ocultismo para identificar pistas indiretas."},
+  "Fotógrafo": {desc: "Artista visual que registrou o paranormal pelas lentes.", per:"Artes e Percepção", pod:"Através da Lente: Gastar 2 PE para +5 em Investigação/Percepção com fotos."},
+  "Inventor Paranormal": {desc: "Projetista excêntrico que emula rituais em engenhocas.", per:"Profissão (engenheiro) e Vontade", pod:"Invenção Paranormal: Invento de cat. 0 emula ritual de 1º círculo via teste."},
+  "Jovem Místico": {desc: "Apegado a crenças astrológicas e energias cósmicas.", per:"Ocultismo e Religião", pod:"A Culpa é das Estrelas: Número da sorte com d6 para bônus."},
+  "Legista do Turno da Noite": {desc: "Profissional de necrotérios nas madrugadas solitárias.", per:"Ciências e Medicina", pod:"Luto Habitual: Metade do dano mental com cadáveres; gastar 2 PE para +5 em Medicina."},
+  "Mateiro": {desc: "Guia de trilhas e habitante de regiões ermas.", per:"Percepção e Sobrevivência", pod:"Mapa Celeste: Sabe sempre a direção e rerrola Sobrevivência."},
+  "Mergulhador": {desc: "Especialista em profundezas aquáticas.", per:"Atletismo e Fortitude", pod:"Fôlego de Nadador: +5 PV, prende respiração por mais tempo e nada sem redutor."},
+  "Motorista": {desc: "Condutor profissional habituado a fugas e trânsito.", per:"Pilotagem e Reflexos", pod:"Mãos no Volante: Sem penalidade de ataque em veículos; gastar 2 PE para +5."},
+  "Nerd Entusiasta": {desc: "Fã de cultura pop com acúmulo de dados ecléticos.", per:"Ciências e Tecnologia", pod:"O Inteligentão: Bônus da ação ler em interlúdio sobe para +2d6."},
+  "Profetizado": {desc: "Teve premonições nítidas da própria morte inevitável.", per:"Vontade e outra à escolha", pod:"Luta ou Fuga: +2 em Vontade e PE temporários ao ver sua premonição."},
+  "Psicólogo": {desc: "Especializado na psique humana e saúde mental.", per:"Intuição e Profissão (psicólogo)", pod:"Terapia: Usa Profissão no lugar de Diplomacia; gasta 2 PE para anular dano mental."},
+  "Repórter Investigativo": {desc: "Jornalista com compromisso com a verdade.", per:"Atualidades e Investigação", pod:"Encontrar a Verdade: Usa Investigação para persuadir; gastar 2 PE para +5."}
+};
+
+// BANCO DE DADOS DE TRILHAS POR CLASSE
+var TRILHAS_DB = {
+  "Combatente": {
+    "Aniquilador": {desc: "Focado em abater alvos com eficiência máxima utilizando arma predileta.", habs: "10% A Favorita | 40% Técnica Secreta | 65% Técnica Sublime | 99% Máquina de Matar."},
+    "Comandante de Campo": {desc: "Estrategista focado em coordenar a equipe e abrir brechas.", habs: "10% Inspirar Confiança | 40% Estrategista | 65% Brecha na Guarda | 99% Oficial Comandante."},
+    "Guerreiro": {desc: "Combatente corpo a corpo que transforma força bruta em devastação.", habs: "10% Técnica Letal | 40% Revidar | 65% Força Opressora | 99% Potência Máxima."},
+    "Operações Especiais": {desc: "Soldado rápido e tático com economia extrema de ações.", habs: "10% Iniciativa Aprimorada | 40% Ataque Extra | 65% Surto de Adrenalina | 99% Sempre Alerta."},
+    "Tropa de Choque": {desc: "O defensor inabalável do grupo, especializado em resistir a dano.", habs: "10% Casca Grossa | 40% Cai Dentro | 65% Duro de Matar | 99% Inquebrável."},
+    "Agente Secreto": {desc: "Infiltrado do governo com privilégios jurídicos e carisma.", habs: "10% Carteirada | 40% O Sorriso | 65% Método Investigativo | 99% Multifacetado."},
+    "Caçador": {desc: "Especialista em rastrear predadores e estudar fraquezas.", habs: "10% Rastrear o Paranormal | 40% Estudar Fraquezas | 65% Atacar das Sombras | 99% Estudar a Presa."},
+    "Monstruoso": {desc: "Submete o próprio corpo a rituais brutais para incorporar uma Entidade.", habs: "10% Ser Amaldiçoado | 40% Ser Macabro | 65% Ser Assustador | 99% Ser Aterrorizante."}
+  },
+  "Especialista": {
+    "Atirador de Elite": {desc: "Especialista em disparos de longa distância cirúrgicos.", habs: "10% Mira de Elite | 40% Disparo Letal | 65% Disparo Impactante | 99% Atirar para Matar."},
+    "Infiltrador": {desc: "Mestre do sigilo, sabotagem e eliminação silenciosa.", habs: "10% Ataque Furtivo | 40% Gatuno | 65% Assassinar | 99% Sombra Fugaz."},
+    "Médico de Campo": {desc: "Socorrista tático focado em suporte médico sob fogo.", habs: "10% Paramédico | 40% Equipe de Trauma | 65% Resgate | 99% Reanimação."},
+    "Negociador": {desc: "Mestre em diplomacia e influência social.", habs: "10% Eloquência | 40% Discurso Motivador | 65% Eu Conheço um Cara | 99% Truque de Mestre."},
+    "Técnico": {desc: "Engenheiro pragmático capaz de otimizar inventários.", habs: "10% Inventário Otimizado | 40% Remendão | 65% Improvisar | 99% Preparado para Tudo."},
+    "Bibliotecário": {desc: "Erudito que transforma pesquisa e arquivos em soluções táticas.", habs: "10% Conhecimento Prático | 40% Leitor Contumaz | 65% Rato de Biblioteca | 99% A Força do Saber."},
+    "Muambeiro": {desc: "Negociador de itens e artesão de campo.", habs: "10% Mascate | 40% Fabricação Própria | 65% Laboratório de Campo | 99% Muamba Sobrenatural."},
+    "Perseverante": {desc: "O arquétipo da 'final girl': incrivelmente resiliente.", habs: "10% Soluções Improvisadas | 40% Fuga Obstinada | 65% Determinação Inquestionável | 99% Só Mais um Passo..."}
+  },
+  "Ocultista": {
+    "Conduíte": {desc: "Manipulador puro da distância, velocidade e fluxo dos rituais.", habs: "10% Ampliar Ritual | 40% Acelerar Ritual | 65% Anular Ritual | 99% Canalizar o Medo."},
+    "Flagelador": {desc: "Transmuta a própria carne e dor alheia em combustível ritualístico.", habs: "10% Poder do Flagelo | 40% Abraçar a Dor | 65% Absorver Agonia | 99% Medo Tangível."},
+    "Graduado": {desc: "Estudioso arquivista com repertório massivo de rituais.", habs: "10% Saber Ampliado | 40% Grimório Ritualístico | 65% Rituais Eficientes | 99% Conhecendo o Medo."},
+    "Intuitivo": {desc: "Ermitão mental com resguardo supremo contra ameaças cognitivas.", habs: "10% Mente Sã | 40% Presença Poderosa | 65% Inabalável | 99% Presença do Medo."},
+    "Lâmina Paranormal": {desc: "Ocultista combatente que empunha rituais em armas.", habs: "10% Lâmina Maldita | 40% Gladiador Paranormal | 65% Conjuração Marcial | 99% Lâmina do Medo."},
+    "Exorcista": {desc: "Sacerdote ou combatente de fé que expurga entidades.", habs: "10% Revelação do Mal | 40% Poder da Fé | 65% Parareligiosidade | 99% Expurgar o Outro Lado."},
+    "Parapsicólogo": {desc: "Estudioso da psique humana que trata o trauma paranormal.", habs: "10% Terapia | 40% Palavras-chave | 65% Desrepressão | 99% A Sanidade Está Lá Fora."},
+    "Possuído": {desc: "Carrega uma entidade em sua essência, canalizando possessão.", habs: "10% Poder Não Desejado | 40% Vontade Compartilhada | 65% Ele Me Ensina | 99% Tornamo-nos Um."}
+  }
+};
+
+// CATÁLOGO COMPLETO DE PODERES PARA SELEÇÃO AUTOMÁTICA
+var PODERES_CATALOGO = {
+  "classe": {
+    "Combatente": {
+      "Armamento Pesado": "Recebe proficiência com armas pesadas (Pré-requisito: For 2).",
+      "Artista Marcial": "Seus ataques desarmados causam 1d6 de dano letal e se tornam ágeis.",
+      "Ataque de Oportunidade": "Reação e 1 PE para desferir um ataque corpo a corpo contra um inimigo que saia voluntariamente de um espaço adjacente.",
+      "Combater com Duas Armas": "Ao usar agredir empunhando duas armas (ao menos uma leve), faz dois ataques com penalidade de –1d20.",
+      "Combate Defensivo": "Na ação agredir, sofre –1d20 nos ataques para receber +5 na Defesa até o próximo turno (Pré-requisito: Int 2).",
+      "Golpe Demolidor": "Ao quebrar ou atacar objetos, gasta 1 PE para causar dois dados de dano extras do tipo da arma.",
+      "Golpe Pesado": "Enquanto empunhar arma corpo a corpo, o dano dela aumenta em mais um dado do mesmo tipo.",
+      "Incansável": "1x/cena, gasta 2 PE para realizar ação de investigação extra usando Força ou Agilidade.",
+      "Presteza Atlética": "Ao facilitar investigação, gasta 1 PE para usar Força ou Agilidade; se passar, o aliado recebe +1d20.",
+      "Proteção Pesada": "Proficiência com proteções pesadas (Pré-requisito: NEX 30%).",
+      "Reflexos Defensivos": "Recebe +2 na Defesa e em testes de resistência (Pré-requisito: Agi 2).",
+      "Saque Rápido": "Saca ou guarda itens como ação livre e recarrega arma de disparo 1x/rodada.",
+      "Segurar o Gatilho": "Ao acertar ataque com arma de fogo, faz ataques extras consecutivos pagando 2 PE cumulativos (Pré-requisito: NEX 60%).",
+      "Sentido Tático": "Ação de movimento e 2 PE para somar Intelecto na Defesa e resistências até o fim da cena.",
+      "Tanque de Guerra": "Aumenta Defesa e RD fornecidas por proteção pesada em +2 (Pré-requisito: Proteção Pesada).",
+      "Tiro Certeiro": "Soma Agilidade no dano de armas de disparo e ignora penalidade em combate corpo a corpo.",
+      "Tiro de Cobertura": "Ação padrão e 1 PE; teste oposto de Pontaria vs Vontade para imobilizar e dar –5 em ataques ao alvo.",
+      "Sem Tempo, Irmão (SaH)": "Auxilia aliados automaticamente em facilitar investigação de forma descuidada."
+    },
+    "Especialista": {
+      "Balística Avançada": "Proficiência com armas de fogo táticas e +2 nas rolagens de dano com armas de fogo.",
+      "Conhecimento Aplicado": "Gasta 2 PE para trocar o atributo-base de testes de perícia para Intelecto (Pré-requisito: Int 2).",
+      "Hacker": "+5 em Tecnologia para invadir sistemas e reduz tempo para ação completa.",
+      "Mãos Rápidas": "Gasta 1 PE para realizar teste de Crime como ação livre (Pré-requisitos: Agi 3, Crime treinado).",
+      "Mochila de Utilidades": "1 item (exceto armas) tem categoria reduzida em I e ocupa 1 espaço a menos.",
+      "Movimento Tático": "Gasta 1 PE para ignorar penalidades de terreno difícil e escalada no turno.",
+      "Na Trilha Certa": "Ao obter sucesso ao procurar pistas, gasta 1 PE para +1d20 cumulativo no próximo teste.",
+      "Nerd": "1x/cena, gasta 2 PE e faz teste de Atualidades (DT 20) para obter informação/fraqueza.",
+      "Ninja Urbano": "Proficiência com armas táticas corpo a corpo e de disparo e +2 em dano com armas brancas.",
+      "Pensamento Ágil": "1x/rodada em investigação, gasta 2 PE para procurar pistas adicional.",
+      "Perito em Explosivos": "Soma Intelecto na DT contra explosivos e exclui aliados do raio de explosão.",
+      "Primeira Impressão": "Recebe +2d20 no primeiro teste de perícia social na cena.",
+      "Acolher o Terror (SaH)": "Pode se entregar para o medo uma vez adicional por sessão.",
+      "Contatos Oportunos (SaH)": "Gasta interlúdio para convocar aliado temporário até o fim da missão.",
+      "Disfarce Sutil (SaH)": "Gasta 1 PE para se disfarçar em ação completa sem kit.",
+      "Esconderijo Desesperado (SaH)": "Não sofre penalidade de Furtividade ao mover em deslocamento normal.",
+      "Especialista Diletante (SaH)": "Aprende poder de outra classe cumprindo requisitos (Pré-requisito: NEX 30%).",
+      "Flashback (SaH)": "Recebe o poder de uma origem que não seja a sua.",
+      "Leitura Fria (SaH)": "Faz perguntas pessoais sobre NPC no interlúdio para ganhar PE temporários.",
+      "Mãos Firmes (SaH)": "Gasta 2 PE para +1d20 em Furtividade ao manipular objetos discretamente."
+    },
+    "Ocultista": {
+      "Camuflar Ocultismo": "Ação livre para ocultar símbolos. Gasta +2 PE para lançar rituais sem componentes e gesticular.",
+      "Criar Selo": "Ação de interlúdio e custo de PE para inscrever selo paranormal (limite igual à Presença).",
+      "Envolto em Mistério": "+5 em Enganação e Intimidação contra pessoas sem treinamento em Ocultismo.",
+      "Especialista em Elemento": "Escolha um elemento; DT para resistir a rituais dele aumenta em +2.",
+      "Ferramentas Paranormais": "Reduz categoria de item paranormal em I e ativa itens sem gastar PE.",
+      "Fluxo de Poder": "Mantém dois rituais sustentados ativos com única ação livre (Pré-requisito: NEX 60%).",
+      "Guiado pelo Paranormal": "1x/cena, gasta 2 PE para ação de investigação adicional.",
+      "Identificação Paranormal": "+10 em Ocultismo para identificar criaturas, rituais ou itens amaldiçoados.",
+      "Improvisar Componentes": "Ação completa e teste de Investigação (DT 15) para achar componentes ritualísticos.",
+      "Intuição Paranormal": "Soma Intelecto ou Presença ao facilitar investigação.",
+      "Mestre em Elemento": "Reduz custo para conjurar rituais de um elemento escolhido em –1 PE.",
+      "Ritual Potente": "Soma Intelecto em dano e cura de rituais (Pré-requisito: Int 2).",
+      "Ritual Predileto": "Custo de conjuração de um ritual conhecido diminui em –1 PE.",
+      "Tatuagem Ritualística": "Reduz em –1 PE o custo de rituais de alcance pessoal com você como alvo.",
+      "Deixe os Sussurros Guiarem (SaH)": "Gasta 2 PE para +2 em investigação na cena, mas perde 1 SAN se falhar.",
+      "Domínio Esotérico (SaH)": "Combina propriedades de dois catalisadores no mesmo ritual (Pré-requisito: Int 3).",
+      "Estalos Macabros (SaH)": "Gasta 1 PE para usar Ocultismo no lugar de perícias comuns ao distrair/fintar.",
+      "Minha Dor me Impulsiona (SaH)": "Se sofreu 5+ de dano, gasta 1 PE para +1d6 em Acrobacia, Atletismo ou Furtividade.",
+      "Nos Olhos do Monstro (SaH)": "Gasta 3 PE encarando criatura para +5 em testes contra ela na cena.",
+      "Olhar Sinistro (SaH)": "Usa Presença em vez de Intelecto em Ocultismo e coage com Ocultismo.",
+      "Sentido Premonitório (SaH)": "Gasta 3 PE para antecipar eventos de investigação e ações inimigas."
+    }
+  },
+  "gerais": {
+    "Acrobático": "Treinamento em Acrobacia. Terreno difícil não reduz deslocamento (Pré-requisito: Agi 2).",
+    "Detector de Mentiras": "Treinamento em Intuição. Outros seres sofrem –10 em Enganação ao mentir contra você.",
+    "Especialista em Emergências": "Treinamento em Medicina. Aplica cicatrizantes como ação de movimento.",
+    "Estigma da Dor": "Converte perda ou dano mental decorrente de medo em perda equivalente de PV.",
+    "Foco em Perícia": "Rola +1d20 em testes de uma perícia escolhida (exceto Luta e Pontaria).",
+    "Informado": "Treinamento em Atualidades. Usa Atualidades para testes informativos gerais.",
+    "Interrogador": "Treinamento em Intimidação. Usa coagir em ação padrão 1x/cena por alvo.",
+    "Persuasivo": "Treinamento em Diplomacia. Reduz penalidades ao pedir coisas arriscadas em –5.",
+    "Pesquisador Científico": "Treinamento em Ciências. Usa Ciências no lugar de Ocultismo para identificar criaturas.",
+    "Artista Marcial": "Ataques desarmados causam 1d6 de dano letal e tornam-se ágeis.",
+    "Combater com Duas Armas": "Faz dois ataques empunhando duas armas com penalidade de –1d20.",
+    "Saque Rápido": "Saca ou guarda itens e recarrega armas de disparo como ação livre."
+  },
+  "paranormais": {
+    "Aprender Ritual (Conhecimento)": "Aprende 1 ritual de 1º círculo (ou até 2º em 45%, 3º em 75%).",
+    "Resistir a Conhecimento": "Recebe resistência 10 contra Conhecimento (Afinidade: resist. 20).",
+    "Expansão de Conhecimento": "Aprende um poder de outra classe (Pré-requisito: Conhecimento 1).",
+    "Percepção Paranormal": "Em investigação, rerrola dado menor que 10 ao procurar pistas.",
+    "Precognição": "+2 na Defesa e em testes de resistência (Pré-requisito: Conhecimento 1).",
+    "Sensitivo": "+5 em Diplomacia, Intimidação e Intuição.",
+    "Visão do Oculto": "+5 em Percepção e ganha visão no escuro.",
+    "Absorver Conhecimento (SaH)": "Extrai resposta automática de livro/celular segurado.",
+    "Apatia Herege (SaH)": "Gasta 2 PE para rerrolar teste contra medo.",
+    "Resistir a Energia": "Resistência a Energia 10 (Afinidade: resist. 20).",
+    "Afortunado": "Rerrola resultado '1' em dados que não sejam d20.",
+    "Campo Protetor": "Ao esquivar, gasta 1 PE para +5 na Defesa (Pré-requisito: Energia 1).",
+    "Causalidade Fortuita": "DT para procurar pistas diminui em –5 até achar a primeira.",
+    "Golpe de Sorte": "+1 na margem de ameaça de ataques (Pré-requisito: Energia 1).",
+    "Manipular Entropia": "Força ser em alcance curto a rerrolar dado.",
+    "Conexão Empática (SaH)": "Conversa com aparelhos eletrônicos ligados para revelar registros.",
+    "Resistir a Morte": "Resistência a Morte 10 (Afinidade: resist. 20).",
+    "Encarar a Morte": "Limite de gasto de PE por rodada aumenta em +1.",
+    "Escapar da Morte": "1x/cena, evita dano que reduziria PV a 0, ficando com 1 PV.",
+    "Potencial Aprimorado": "+1 PE por nível de exposição (NEX).",
+    "Potencial Reaproveitado": "Ao passar em teste de resistência, ganha 2 PE temporários.",
+    "Surto Temporal": "1x/cena, gasta 3 PE para ação padrão adicional (Pré-requisito: Morte 2).",
+    "Antecipar Vitalidade (SaH)": "+1d20 em teste acumulando carga de antecipação até o Vigor.",
+    "Aura de Pavor (SaH)": "Deixa ser em alcance médio apavorado (Ação de movimento e 2 PE).",
+    "Resistir a Sangue": "Resistência a Sangue 10 (Afinidade: resist. 20).",
+    "Anatomia Insana": "50% de chance de ignorar dano crítico e furtivo (Pré-requisito: Sangue 2).",
+    "Arma de Sangue": "Brota arma leve (1d6) gastando movimento e 2 PE.",
+    "Sangue de Ferro": "+2 PV adicionais por nível de NEX.",
+    "Sangue Fervente": "+1 em Força ou Agilidade quando machucado.",
+    "Sangue Vivo": "Cura Acelerada 2 na 1ª vez que ficar machucado na cena.",
+    "Espreitar da Besta (SaH)": "+5 em Furtividade e usa Furtividade em perseguições.",
+    "Instintos Sanguinários (SaH)": "Visão no escuro e faro aguçado."
+  }
+};
 
 var agentes = [];
 var atualId = null;
@@ -520,6 +769,59 @@ function agendarSalvar() {
   $('save-ind').textContent = 'Salvando...';
   clearTimeout(saveTimer);
   saveTimer = setTimeout(salvarAgora, 300);
+}
+
+function popularSelects() {
+  var selOrigem = $('f-origem');
+  var origHtml = '<option value="">-- Selecione a Origem --</option>';
+  for (var org in ORIGENS_DB) {
+    origHtml += '<option value="' + org + '">' + org + '</option>';
+  }
+  selOrigem.innerHTML = origHtml;
+  atualizarTrilhasSelect();
+  popularSubPoderes();
+}
+
+function atualizarTrilhasSelect() {
+  var classeSel = $('f-classe') ? $('f-classe').value : 'Combatente';
+  var selTrilha = $('f-trilha');
+  var trilhasObj = TRILHAS_DB[classeSel] || TRILHAS_DB['Combatente'];
+  
+  var trilhaAtual = ag ? ag.trilha : '';
+  var trilhaHtml = '<option value="">-- Nenhuma / Sem Trilha --</option>';
+  for (var tr in trilhasObj) {
+    trilhaHtml += '<option value="' + tr + '"' + (trilhaAtual === tr ? ' selected' : '') + '>' + tr + '</option>';
+  }
+  selTrilha.innerHTML = trilhaHtml;
+  popularSubPoderes();
+}
+
+function popularSubPoderes() {
+  var catEl = $('sel-cat-poder');
+  var selLista = $('sel-lista-poder');
+  if (!catEl || !selLista) return;
+
+  var cat = catEl.value;
+  var h = '';
+  
+  if (cat === 'classe') {
+    var cls = ag ? ag.classe : 'Combatente';
+    var pClasse = PODERES_CATALOGO.classe[cls] || {};
+    for (var nome in pClasse) {
+      h += '<option value="' + esc(nome) + '">' + esc(nome) + '</option>';
+    }
+  } else if (cat === 'gerais') {
+    var pGerais = PODERES_CATALOGO.gerais;
+    for (var nome in pGerais) {
+      h += '<option value="' + esc(nome) + '">' + esc(nome) + '</option>';
+    }
+  } else if (cat === 'paranormais') {
+    var pPara = PODERES_CATALOGO.paranormais;
+    for (var nome in pPara) {
+      h += '<option value="' + esc(nome) + '">' + esc(nome) + '</option>';
+    }
+  }
+  selLista.innerHTML = h;
 }
 
 function normalizar(a) {
@@ -607,6 +909,7 @@ function abrir(id) {
   atualId = id;
   $('view-list').className = 'view';
   $('view-sheet').className = 'view active';
+  popularSelects();
   preencherForm();
   aba('ficha');
   window.scrollTo(0, 0);
@@ -630,6 +933,8 @@ function preencherForm() {
   var sel = $('f-patente'), h = '';
   for (var i = 0; i < PATENTES.length; i++) h += '<option value="' + esc(PATENTES[i].n) + '">' + esc(PATENTES[i].n) + '</option>';
   sel.innerHTML = h;
+
+  atualizarTrilhasSelect();
 
   var els = document.querySelectorAll('[data-f]');
   for (var j = 0; j < els.length; j++) {
@@ -686,7 +991,6 @@ function atualizar() {
   $('c-cred').textContent = pat.cred;
   $('c-status').innerHTML = d.cargaUso > d.cargaMax ? '<span class="chip chip-red">SOBRECARREGADO</span>' : '<span class="chip chip-ok">Carga OK</span>';
   
-  // Atualizar Visão Geral (Publicada)
   $('pub-nome').textContent = ag.nome || 'Agente Sem Nome';
   $('pub-subdet').textContent = esc(ag.classe) + (ag.trilha ? ' (' + esc(ag.trilha) + ')' : '') + ' · NEX ' + ag.nex + '%';
   $('pub-jogador').textContent = ag.jogador || '-';
@@ -733,8 +1037,17 @@ function onField(e) {
     if (el.type === 'checkbox') v = el.checked;
     else if (el.getAttribute('data-n')) { v = parseInt(el.value, 10); if (isNaN(v)) v = 5; }
     else v = el.value;
+    
     if (f === 'nex' && e.type === 'change') { v = Math.max(5, Math.min(99, v)); el.value = v; }
+    
     ag[f] = v;
+
+    if (f === 'classe') {
+      atualizarTrilhasSelect();
+      popularSubPoderes();
+      ag.trilha = '';
+    }
+
     if (f === 'nome') $('sheet-title').textContent = v || 'Ficha';
     atualizar(); agendarSalvar();
   } else if (a) {
@@ -976,6 +1289,50 @@ var ACOES = {
   delRit: function (el) { if (confirm('Remover ritual?')) { ag.rituais.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderRituais(); agendarSalvar(); } },
   addPod: function () { ag.poderes.push({nome: 'Poder', desc: ''}); renderPoderes(); agendarSalvar(); },
   delPod: function (el) { if (confirm('Remover poder?')) { ag.poderes.splice(parseInt(el.getAttribute('data-arg'), 10), 1); renderPoderes(); agendarSalvar(); } },
+  
+  adicionarPoderCatalogo: function () {
+    var cat = $('sel-cat-poder').value;
+    var nomePoder = $('sel-lista-poder').value;
+    if (!nomePoder) { toast('Selecione um poder'); return; }
+
+    var descPoder = '';
+    if (cat === 'classe') {
+      var cls = ag.classe;
+      descPoder = PODERES_CATALOGO.classe[cls] && PODERES_CATALOGO.classe[cls][nomePoder] ? PODERES_CATALOGO.classe[cls][nomePoder] : '';
+    } else if (cat === 'gerais') {
+      descPoder = PODERES_CATALOGO.gerais[nomePoder] || '';
+    } else if (cat === 'paranormais') {
+      descPoder = PODERES_CATALOGO.paranormais[nomePoder] || '';
+    }
+
+    ag.poderes.push({nome: nomePoder, desc: descPoder});
+    renderPoderes();
+    agendarSalvar();
+    toast('Poder adicionado!');
+  },
+
+  infoOrigem: function () {
+    var val = $('f-origem').value;
+    if (!val || !ORIGENS_DB[val]) { toast('Selecione uma origem primeiro'); return; }
+    var info = ORIGENS_DB[val];
+    $('info-modal-title').textContent = 'Origem: ' + val;
+    $('info-modal-body').innerHTML = '<b>Descrição:</b> ' + info.desc + '<br><br><b>Perícias:</b> ' + info.per + '<br><br><b>Poder:</b> ' + info.pod;
+    $('info-modal').style.display = 'block';
+  },
+
+  infoTrilha: function () {
+    var val = $('f-trilha').value;
+    if (!val) { toast('Selecione uma trilha primeiro'); return; }
+    var classeSel = $('f-classe').value;
+    var info = TRILHAS_DB[classeSel] && TRILHAS_DB[classeSel][val];
+    if (!info) { toast('Informação indisponível'); return; }
+    $('info-modal-title').textContent = 'Trilha: ' + val;
+    $('info-modal-body').innerHTML = '<b>Descrição:</b> ' + info.desc + '<br><br><b>Habilidades:</b> ' + info.habs;
+    $('info-modal').style.display = 'block';
+  },
+
+  fecharInfo: function () { $('info-modal').style.display = 'none'; },
+
   diceToggle: function () { var s = $('dice-sheet'); s.style.display = s.style.display === 'block' ? 'none' : 'block'; },
   diceFechar: function () { $('dice-sheet').style.display = 'none'; },
   rolarLivre: function () {
@@ -1017,6 +1374,11 @@ document.addEventListener('click', function (e) {
 });
 document.addEventListener('input', onField);
 document.addEventListener('change', onField);
+
+var catPoderEl = $('sel-cat-poder');
+if (catPoderEl) {
+  catPoderEl.addEventListener('change', popularSubPoderes);
+}
 
 var bkFileInput = $('bk-file');
 if (bkFileInput) {
