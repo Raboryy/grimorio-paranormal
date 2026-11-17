@@ -11,47 +11,86 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
-:root{
-  --bg: #08080a;
-  --panel: #111116;
-  --border: #272732;
-  --border-neon: #7e22ce;
-  --text: #f3f4f6;
+/* --- TEMAS DOS ELEMENTOS DO OUTRO LADO (MODO NOTURNO CORRIGIDO) --- */
+
+/* Morte: Preto com Destaques em Branco/Prateado (Padrão) */
+:root {
+  --bg-app: #060608;
+  --panel-app: #0f0f13;
+  --border-app: #22222d;
+  --accent-neon: #f4f4f5; /* Branco Gelo Brilhante */
+  --accent-mid: #a1a1aa;  /* Prateado de Destaque */
+  --text-main: #f4f4f5;
+  --muted: #a1a1aa;
+  --glow-effect: rgba(244, 244, 245, 0.25);
+  --input: #030304;
+}
+
+/* Vermelho - Sangue */
+html[data-theme="sangue"] {
+  --bg-app: #0d0505;
+  --panel-app: #160a0a;
+  --border-app: #3a1515;
+  --accent-neon: #f87171; /* Vermelho Sangue Neon */
+  --accent-mid: #dc2626;
+  --text-main: #f3f4f6;
   --muted: #9ca3af;
-  --purple-neon: #c084fc;
-  --purple-mid: #9333ea;
-  --purple-dark: #581c87;
-  --red: #991b1b;
-  --red-neon: #ef4444;
-  --gold: #fbbf24;
+  --glow-effect: rgba(220, 38, 38, 0.3);
   --input: #050507;
 }
+
+/* Roxo - Energia */
+html[data-theme="energia"] {
+  --bg-app: #08050d;
+  --panel-app: #120a1a;
+  --border-app: #2e1065;
+  --accent-neon: #c084fc; /* Roxo Choque / Energia */
+  --accent-mid: #9333ea;
+  --text-main: #f3f4f6;
+  --muted: #9ca3af;
+  --glow-effect: rgba(192, 132, 252, 0.35);
+  --input: #050507;
+}
+
+/* Amarelo - Conhecimento */
+html[data-theme="conhecimento"] {
+  --bg-app: #0a0905;
+  --panel-app: #16130a;
+  --border-app: #422006;
+  --accent-neon: #fbbf24; /* Amarelo Dourado / Conhecimento */
+  --accent-mid: #d97706;
+  --text-main: #f3f4f6;
+  --muted: #9ca3af;
+  --glow-effect: rgba(251, 191, 36, 0.3);
+  --input: #050507;
+}
+
 *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--text)}
+html,body{background:var(--bg-app);color:var(--text-main)}
 body{padding:10px 10px 90px 10px;font-size:16px;-webkit-text-size-adjust:100%}
 .wrap{max-width:980px;margin:0 auto}
 
-header{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--border-neon);box-shadow:0 0 15px rgba(147,51,234,0.15);padding:12px 14px;border-radius:12px;margin-bottom:12px}
-header h1{font-size:1.15rem;color:var(--purple-neon);text-transform:uppercase;letter-spacing:1.5px;flex:1;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 8px;text-shadow:0 0 8px rgba(192,132,252,0.4)}
+header{display:flex;justify-content:space-between;align-items:center;background:var(--panel-app);border:1px solid var(--accent-neon);box-shadow:0 0 15px var(--glow-effect);padding:12px 14px;border-radius:12px;margin-bottom:12px}
+header h1{font-size:1.15rem;color:var(--accent-neon);text-transform:uppercase;letter-spacing:1.5px;flex:1;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding:0 8px;text-shadow:0 0 8px var(--glow-effect)}
 
-button,select,input,textarea{background:var(--input);color:var(--text);border:1px solid var(--border);padding:10px 12px;border-radius:8px;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
+button,select,input,textarea{background:var(--input);color:var(--text-main);border:1px solid var(--border-app);padding:10px 12px;border-radius:8px;font-size:16px;outline:none;-webkit-appearance:none;appearance:none}
 select{background-image:none;padding-right:8px;width:100%;text-overflow:ellipsis}
 button{font-weight:bold;min-height:44px;cursor:pointer;transition:all 0.2s}
 button:active{opacity:.8;transform:scale(0.98)}
 
-.btn-p{background:var(--purple-mid);border-color:var(--purple-neon);box-shadow:0 0 10px rgba(147,51,234,0.3);color:#fff}
-.btn-s{background:#181820;border-color:var(--border)}
+.btn-p{background:var(--accent-mid);border-color:var(--accent-neon);box-shadow:0 0 10px var(--glow-effect);color:#fff}
+.btn-s{background:#181820;border-color:var(--border-app)}
 .btn-sm{min-height:36px;padding:6px 10px;font-size:14px}
-.btn-red{background:var(--red);border-color:var(--red-neon);box-shadow:0 0 10px rgba(239,68,68,0.3)}
+.btn-red{background:#991b1b;border-color:#ef4444;box-shadow:0 0 10px rgba(239,68,68,0.3)}
 
 .view{display:none}.view.active{display:block}
-.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
-.card h2{font-size:.95rem;color:var(--purple-neon);margin-bottom:10px;border-bottom:1px solid var(--border-neon);padding-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.card{background:var(--panel-app);border:1px solid var(--border-app);border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.card h2{font-size:.95rem;color:var(--accent-neon);margin-bottom:10px;border-bottom:1px solid var(--accent-neon);padding-bottom:6px;text-transform:uppercase;letter-spacing:1px}
 
 .row{display:flex;align-items:center;margin-bottom:8px}
 .row>label{flex:1;font-size:.9rem;color:var(--muted);padding-right:8px}
 .row>input,.row>select{flex:2;min-width:0}
-.row>input[type=checkbox]{flex:none;width:28px;height:28px;accent-color:var(--purple-mid)}
+.row>input[type=checkbox]{flex:none;width:28px;height:28px;accent-color:var(--accent-mid)}
 
 .input-group{display:flex;flex:2;gap:6px}
 .input-group select{flex:1;min-width:0}
@@ -59,12 +98,12 @@ button:active{opacity:.8;transform:scale(0.98)}
 .btnrow{display:flex;flex-wrap:wrap}
 .btnrow>*{margin-right:6px;margin-bottom:6px}
 
-.agent{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--purple-mid)}
-.agent h3{font-size:1.1rem;color:var(--text)}.agent p{font-size:.85rem;color:var(--muted);margin-top:2px}
+.agent{display:flex;justify-content:space-between;align-items:center;background:var(--panel-app);border:1px solid var(--border-app);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--accent-mid)}
+.agent h3{font-size:1.1rem;color:var(--text-main)}.agent p{font-size:.85rem;color:var(--muted);margin-top:2px}
 
-.tabs{display:flex;background:var(--panel);border:1px solid var(--border-neon);border-radius:12px;overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;position:-webkit-sticky;position:sticky;top:0;z-index:50;box-shadow:0 4px 15px rgba(0,0,0,0.6)}
+.tabs{display:flex;background:var(--panel-app);border:1px solid var(--accent-neon);border-radius:12px;overflow-x:auto;margin-bottom:12px;-webkit-overflow-scrolling:touch;position:-webkit-sticky;position:sticky;top:0;z-index:50;box-shadow:0 4px 15px rgba(0,0,0,0.6)}
 .tab{background:transparent;border:none;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:12px 14px;white-space:nowrap;flex:1;font-size:.9rem;text-transform:uppercase;letter-spacing:0.5px}
-.tab.active{color:var(--purple-neon);background:#1a102f;border-bottom-color:var(--purple-neon);text-shadow:0 0 6px rgba(192,132,252,0.4)}
+.tab.active{color:var(--accent-neon);background:var(--input);border-bottom-color:var(--accent-neon);text-shadow:0 0 6px var(--glow-effect)}
 
 .sheet-tab{display:none}.sheet-tab.active{display:block}
 
@@ -72,40 +111,40 @@ button:active{opacity:.8;transform:scale(0.98)}
 .grid2{display:grid;grid-template-columns:1fr;grid-gap:10px}
 @media (min-width:700px){.grid3{grid-template-columns:1fr 1fr 1fr}.grid2{grid-template-columns:1fr 1fr}}
 
-.stat{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.stat{background:var(--input);border:1px solid var(--border-app);border-radius:10px;padding:10px;text-align:center}
 .stat h4{font-size:.85rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase}
 .stat .val{display:flex;justify-content:center;align-items:center;font-size:1.3rem;font-weight:bold;margin-bottom:6px}
-.stat .val input{width:70px;text-align:center;font-size:1.3rem;font-weight:bold;padding:4px;color:var(--purple-neon)}
+.stat .val input{width:70px;text-align:center;font-size:1.3rem;font-weight:bold;padding:4px;color:var(--accent-neon)}
 .stat .val span{margin:0 6px;color:var(--muted)}
-.bar{height:12px;background:#030304;border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border)}
+.bar{height:12px;background:#030304;border-radius:6px;overflow:hidden;margin-bottom:8px;border:1px solid var(--border-app)}
 .bar>div{height:100%;transition:width .2s}
 .stat .btnrow{justify-content:center}.stat .btnrow button{min-width:50px}
 
 .estados{min-height:30px;margin-bottom:12px;text-align:center}
 .chip{display:inline-block;padding:6px 14px;border-radius:16px;font-weight:bold;font-size:.85rem;margin-right:6px;margin-bottom:6px;letter-spacing:0.5px}
-.chip-red{background:rgba(153,27,27,0.4);border:1px solid var(--red-neon);color:#fca5a5;box-shadow:0 0 8px rgba(239,68,68,0.3)}
+.chip-red{background:rgba(153,27,27,0.4);border:1px solid #ef4444;color:#fca5a5}
 .chip-orange{background:rgba(154,52,18,0.4);border:1px solid #f97316;color:#fed7aa}
-.chip-purple{background:rgba(88,28,135,0.4);border:1px solid var(--purple-neon);color:#e9d5ff;box-shadow:0 0 8px rgba(192,132,252,0.3)}
+.chip-purple{background:rgba(88,28,135,0.4);border:1px solid var(--accent-neon);color:#e9d5ff}
 .chip-ok{background:rgba(20,83,45,0.4);border:1px solid #22c55e;color:#bbf7d0}
 
 .attrs{display:grid;grid-template-columns:repeat(5,1fr);grid-gap:8px}
-.attr{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px 4px;text-align:center}
-.attr h4{font-size:.8rem;color:var(--purple-neon)}
-.attr input{width:100%;max-width:60px;text-align:center;font-size:1.3rem;font-weight:bold;margin:4px 0;padding:6px 2px;color:var(--purple-neon)}
+.attr{background:var(--input);border:1px solid var(--border-app);border-radius:10px;padding:8px 4px;text-align:center}
+.attr h4{font-size:.8rem;color:var(--accent-neon)}
+.attr input{width:100%;max-width:60px;text-align:center;font-size:1.3rem;font-weight:bold;margin:4px 0;padding:6px 2px;color:var(--accent-neon)}
 .attr button{width:100%;font-size:.8rem;padding:6px 0}
 
 .minis{display:grid;grid-template-columns:repeat(3,1fr);grid-gap:8px;margin-bottom:10px}
-.mini{background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.mini{background:var(--input);border:1px solid var(--border-app);border-radius:8px;padding:8px;text-align:center}
 .mini small{display:block;color:var(--muted);font-size:.75rem;text-transform:uppercase;margin-bottom:2px}
-.mini b{font-size:1.2rem;color:var(--purple-neon)}
+.mini b{font-size:1.2rem;color:var(--accent-neon)}
 
 table{width:100%;border-collapse:collapse;font-size:.9rem}
-th,td{border-bottom:1px solid var(--border);padding:8px 6px;text-align:left;vertical-align:middle}
-th{color:var(--purple-neon);font-size:.75rem;text-transform:uppercase;letter-spacing:0.5px}
+th,td{border-bottom:1px solid var(--border-app);padding:8px 6px;text-align:left;vertical-align:middle}
+th{color:var(--accent-neon);font-size:.75rem;text-transform:uppercase;letter-spacing:0.5px}
 td select,td input{width:100%;padding:6px 4px;font-size:14px}
-td.num{text-align:center;font-weight:bold;color:var(--purple-neon)}
+td.num{text-align:center;font-weight:bold;color:var(--accent-neon)}
 
-.sub{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px}
+.sub{background:var(--input);border:1px solid var(--border-app);border-radius:10px;padding:12px;margin-bottom:10px}
 .sub .row input[type=number]{flex:1}
 .cols{display:flex}.cols>div{flex:1;margin-right:6px}.cols>div:last-child{margin-right:0}
 .cols label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:2px}
@@ -115,21 +154,21 @@ textarea{width:100%;height:110px;resize:vertical}
 .hint{font-size:.8rem;color:var(--muted);margin-bottom:8px}
 
 .published-sheet {
-  background: #0d0d12;
-  border: 2px solid var(--purple-mid);
+  background: var(--panel-app);
+  border: 2px solid var(--accent-mid);
   border-radius: 12px;
   padding: 16px;
-  box-shadow: inset 0 0 20px rgba(88,28,135,0.2), 0 5px 25px rgba(0,0,0,0.8);
+  box-shadow: inset 0 0 20px var(--glow-effect), 0 5px 25px rgba(0,0,0,0.8);
   margin-bottom: 14px;
 }
 .pub-header {
-  border-bottom: 1px solid var(--border-neon);
+  border-bottom: 1px solid var(--accent-neon);
   padding-bottom: 10px;
   margin-bottom: 12px;
 }
 .pub-title {
   font-size: 1.25rem;
-  color: var(--purple-neon);
+  color: var(--accent-neon);
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -147,35 +186,35 @@ textarea{width:100%;height:110px;resize:vertical}
 }
 .pub-item {
   background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-app);
   border-radius: 8px;
   padding: 8px 10px;
 }
 .pub-item label {
   font-size: 0.75rem;
-  color: var(--purple-neon);
+  color: var(--accent-neon);
   text-transform: uppercase;
   display: block;
 }
 .pub-item span {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--text);
+  color: var(--text-main);
 }
 
-#dice-fab{position:fixed;right:16px;bottom:16px;width:60px;height:60px;border-radius:30px;background:var(--purple-mid);border:2px solid var(--purple-neon);box-shadow:0 0 15px rgba(192,132,252,0.5);font-size:26px;z-index:900;padding:0;color:#fff}
-#dice-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:#0d0d12;border-top:2px solid var(--purple-neon);padding:12px 14px 16px;z-index:1000;max-height:75vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -10px 30px rgba(0,0,0,0.9)}
-#dice-sheet h3{font-size:.95rem;color:var(--purple-neon)}
-.dice-main{font-size:3rem;font-weight:bold;text-align:center;line-height:1.1;margin:6px 0;color:var(--purple-neon);text-shadow:0 0 10px rgba(192,132,252,0.4)}
+#dice-fab{position:fixed;right:16px;bottom:16px;width:60px;height:60px;border-radius:30px;background:var(--accent-mid);border:2px solid var(--accent-neon);box-shadow:0 0 15px var(--glow-effect);font-size:26px;z-index:900;padding:0;color:#fff}
+#dice-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--panel-app);border-top:2px solid var(--accent-neon);padding:12px 14px 16px;z-index:1000;max-height:75vh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -10px 30px rgba(0,0,0,0.9)}
+#dice-sheet h3{font-size:.95rem;color:var(--accent-neon)}
+.dice-main{font-size:3rem;font-weight:bold;text-align:center;line-height:1.1;margin:6px 0;color:var(--accent-neon);text-shadow:0 0 10px var(--glow-effect)}
 .dice-main.crit{color:var(--gold);text-shadow:0 0 10px rgba(251,191,36,0.6)}
-.dice-main.fail{color:var(--red-neon)}
+.dice-main.fail{color:#ef4444}
 #dice-detail{text-align:center;font-size:.95rem;color:var(--muted);margin-bottom:8px;min-height:20px}
 #dice-log{font-size:.8rem;color:var(--muted);margin:8px 0}
-#dice-log div{padding:3px 0;border-bottom:1px solid var(--border)}
+#dice-log div{padding:3px 0;border-bottom:1px solid var(--border-app)}
 
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.9);z-index:2000;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .modal .card{max-width:620px;margin:20px auto}
-#toast{position:fixed;left:50%;top:60px;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:var(--panel);border:1px solid var(--purple-neon);color:var(--purple-neon);padding:10px 18px;border-radius:10px;z-index:3000;display:none;max-width:90%;text-align:center;box-shadow:0 0 15px rgba(147,51,234,0.3);font-weight:bold}
+#toast{position:fixed;left:50%;top:60px;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:var(--panel-app);border:1px solid var(--accent-neon);color:var(--accent-neon);padding:10px 18px;border-radius:10px;z-index:3000;display:none;max-width:90%;text-align:center;box-shadow:0 0 15px var(--glow-effect);font-weight:bold}
 #save-ind{font-size:.75rem;color:var(--muted);margin-right:8px;white-space:nowrap}
 </style>
 </head>
@@ -262,8 +301,8 @@ textarea{width:100%;height:110px;resize:vertical}
     <div class="grid3">
       <div class="stat">
         <h4>PV (Vida)</h4>
-        <div class="val"><input type="number" id="cur-pv" data-cur="pv"><span>/</span><b id="max-pv" style="color:var(--red-neon)">0</b></div>
-        <div class="bar"><div id="bar-pv" style="background:var(--red)"></div></div>
+        <div class="val"><input type="number" id="cur-pv" data-cur="pv"><span>/</span><b id="max-pv" style="color:#ef4444">0</b></div>
+        <div class="bar"><div id="bar-pv" style="background:#991b1b"></div></div>
         <div class="btnrow">
           <button class="btn-s" type="button" data-act="ajuste" data-t="pv" data-d="-5">-5</button>
           <button class="btn-s" type="button" data-act="ajuste" data-t="pv" data-d="-1">-1</button>
@@ -273,8 +312,8 @@ textarea{width:100%;height:110px;resize:vertical}
       </div>
       <div class="stat">
         <h4>PE (Esforço)</h4>
-        <div class="val"><input type="number" id="cur-pe" data-cur="pe"><span>/</span><b id="max-pe" style="color:var(--purple-neon)">0</b></div>
-        <div class="bar"><div id="bar-pe" style="background:var(--purple-mid)"></div></div>
+        <div class="val"><input type="number" id="cur-pe" data-cur="pe"><span>/</span><b id="max-pe" style="color:var(--accent-neon)">0</b></div>
+        <div class="bar"><div id="bar-pe" style="background:var(--accent-mid)"></div></div>
         <div class="btnrow">
           <button class="btn-s" type="button" data-act="ajuste" data-t="pe" data-d="-5">-5</button>
           <button class="btn-s" type="button" data-act="ajuste" data-t="pe" data-d="-1">-1</button>
@@ -284,8 +323,8 @@ textarea{width:100%;height:110px;resize:vertical}
       </div>
       <div class="stat">
         <h4>Sanidade</h4>
-        <div class="val"><input type="number" id="cur-san" data-cur="san"><span>/</span><b id="max-san" style="color:var(--purple-neon)">0</b></div>
-        <div class="bar"><div id="bar-san" style="background:var(--purple-dark)"></div></div>
+        <div class="val"><input type="number" id="cur-san" data-cur="san"><span>/</span><b id="max-san" style="color:var(--accent-neon)">0</b></div>
+        <div class="bar"><div id="bar-san" style="background:var(--accent-mid)"></div></div>
         <div class="btnrow">
           <button class="btn-s" type="button" data-act="ajuste" data-t="san" data-d="-5">-5</button>
           <button class="btn-s" type="button" data-act="ajuste" data-t="san" data-d="-1">-1</button>
@@ -426,7 +465,7 @@ textarea{width:100%;height:110px;resize:vertical}
     </div>
 
     <!-- PAINEL DE ADICIONAR PODERES AUTOMÁTICOS -->
-    <div class="card" style="border-color: var(--purple-neon);">
+    <div class="card" style="border-color: var(--accent-neon);">
       <h2>Adicionar Poderes e Habilidades Rápidas</h2>
       <div class="row">
         <label>Categoria</label>
@@ -450,20 +489,18 @@ textarea{width:100%;height:110px;resize:vertical}
     </div>
   </div>
 
- <!-- ABA DIARIO -->
+  <!-- ABA DIARIO -->
   <div id="tab-diario" class="sheet-tab">
-    <div class="card" style="border-color:var(--purple-neon);">
+    <div class="card" style="border-color:var(--accent-neon);">
       <h2>Planejamento &amp; Campanha (Planner)</h2>
       <div class="hint">Organize suas pistas, alvos e anotações de investigação como um verdadeiro agente da Ordem.</div>
       
-      <!-- CONTROLE DE SESSÃO -->
       <div class="cols" style="margin-bottom:10px">
         <div><label>Sessão Atual</label><input type="text" id="f-sessao" data-f="sessaoCampanha" placeholder="Ex: Sessão 04"></div>
         <div><label>Localização Atual</label><input type="text" id="f-local" data-f="localCampanha" placeholder="Ex: Matinhos / PR"></div>
       </div>
     </div>
 
-    <!-- BLOCO DE PISTAS E ALVOS -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h2 style="margin:0; border:none; padding:0;">Quadro de Pistas &amp; Alvos</h2>
@@ -472,7 +509,6 @@ textarea{width:100%;height:110px;resize:vertical}
       <div id="pistas-container"></div>
     </div>
 
-    <!-- CHECKLIST DE TAREFAS / PENDÊNCIAS -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <h2 style="margin:0; border:none; padding:0;">Pendências da Missão</h2>
@@ -481,7 +517,6 @@ textarea{width:100%;height:110px;resize:vertical}
       <div id="tarefas-container"></div>
     </div>
 
-    <!-- BLOCO DE ANOTAÇÕES LIVRES (TRADICIONAL) -->
     <div class="card">
       <h2>Anotações Livres / Diário de Bordo</h2>
       <textarea id="f-diario" data-f="diario" style="height:200px" placeholder="Escreva os detalhes aprofundados da investigação..."></textarea>
@@ -495,8 +530,8 @@ textarea{width:100%;height:110px;resize:vertical}
 <!-- MODAL DE INFORMAÇÕES -->
 <div id="info-modal" class="modal">
   <div class="card">
-    <h2 id="info-modal-title" style="color:var(--purple-neon)">Informação</h2>
-    <div id="info-modal-body" style="font-size:0.9rem; color:var(--text); line-height:1.5; margin: 12px 0;"></div>
+    <h2 id="info-modal-title" style="color:var(--accent-neon)">Informação</h2>
+    <div id="info-modal-body" style="font-size:0.9rem; color:var(--text-main); line-height:1.5; margin: 12px 0;"></div>
     <button class="btn-p" type="button" data-act="fecharInfo" style="width:100%">Fechar</button>
   </div>
 </div>
@@ -544,6 +579,23 @@ textarea{width:100%;height:110px;resize:vertical}
 </div>
 
 <div id="toast"></div>
+
+<!-- BOTÃO FLUTUANTE DE TEMAS (ELEMENTOS DO OUTRO LADO) CORRIGIDO NO ESCOPO GLOBAL -->
+<div style="position: fixed; left: 16px; bottom: 16px; z-index: 950;">
+  <button type="button" onclick="window.toggleThemeMenu()" style="width: 50px; height: 50px; border-radius: 25px; background: var(--panel-app); border: 2px solid var(--accent-neon); color: var(--accent-neon); box-shadow: 0 0 15px var(--glow-effect); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    👁️
+  </button>
+
+  <!-- MENU SUSPENSO DOS ELEMENTOS -->
+  <div id="theme-menu" style="display: none; position: absolute; bottom: 60px; left: 0; background: var(--panel-app); border: 1px solid var(--border-app); border-radius: 10px; padding: 12px; width: 220px; box-shadow: 0 5px 25px rgba(0,0,0,0.9);">
+    <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-app); padding-bottom: 4px;">Elemento do Outro Lado</div>
+    
+    <button class="btn-s btn-sm" onclick="window.mudarTema('energia')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #c084fc;">🟣 Roxo - Energia</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('conhecimento')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #fbbf24;">🟡 Amarelo - Conhecimento</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('sangue')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #f87171;">🔴 Vermelho - Sangue</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('morte')" style="width:100%; text-align:left; border-left: 4px solid #f4f4f5;">💀 Morte - Preto e Branco</button>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -764,7 +816,7 @@ var PODERES_CATALOGO = {
     "Aprender Ritual (Conhecimento)": "Aprende 1 ritual de 1º círculo (ou até 2º em 45%, 3º em 75%).",
     "Resistir a Conhecimento": "Recebe resistência 10 contra Conhecimento (Afinidade: resist. 20).",
     "Expansão de Conhecimento": "Aprende um poder de outra classe (Pré-requisito: Conhecimento 1).",
-    "Percepção Paranormal": "Em investigação, rerrola dado menor que 10 ao procurar pistas.",
+    "Percepção Paranormal": "Em investigação, rerrola dado menos que 10 ao procurar pistas.",
     "Precognição": "+2 na Defesa e em testes de resistência (Pré-requisito: Conhecimento 1).",
     "Sensitivo": "+5 em Diplomacia, Intimidação e Intuição.",
     "Visão do Oculto": "+5 em Percepção e ganha visão no escuro.",
@@ -929,7 +981,6 @@ function derivados() {
   
   if (ag.classe === 'Mundano') {
     var est = parseInt(ag.estagio, 10) || 1;
-    // Sobrevivente: PV = 8+Vig + 2 por estágio extra; PE = 2+Pre + 1 por estágio extra; SAN = 8 + 2 por estágio extra
     d.pvMax = (8 + at.vig) + (est - 1) * 2 + b.pv;
     d.peMax = (2 + at.pre) + (est - 1) * 1 + b.pe;
     d.sanMax = 8 + (est - 1) * 2 + b.san;
@@ -961,6 +1012,33 @@ function derivados() {
   d.cargaUso = uso;
   return d;
 }
+
+window.toggleThemeMenu = function() {
+  var menu = document.getElementById('theme-menu');
+  if (menu) {
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+  }
+};
+
+window.mudarTema = function(elemento) {
+  var htmlRoot = document.documentElement;
+  if (elemento === 'morte') {
+    htmlRoot.removeAttribute('data-theme');
+    localStorage.setItem('op_theme', 'morte');
+  } else {
+    htmlRoot.setAttribute('data-theme', elemento);
+    localStorage.setItem('op_theme', elemento);
+  }
+  window.toggleThemeMenu();
+  toast('Sintonizado com o elemento: ' + elemento.toUpperCase());
+};
+
+(function () {
+  var salvo = localStorage.getItem('op_theme');
+  if (salvo && salvo !== 'morte') {
+    document.documentElement.setAttribute('data-theme', salvo);
+  }
+})();
 
 function renderLista() {
   var box = $('agent-list');
@@ -1240,7 +1318,6 @@ function area(lista, i, k, val, ph) {
 
 function renderArmas() {
   var h = '';
-  // Lista de todas as perícias do sistema para o seletor de ataque da arma
   var opcoesPericias = [
     {id:'luta', n:'Luta (FOR)'},
     {id:'pontaria', n:'Pontaria (AGI)'},
@@ -1300,14 +1377,13 @@ function renderArmas() {
   $('armas').innerHTML = h || '<p class="hint">Nenhuma arma cadastrada.</p>';
 }
 
-// Renderizar Quadro de Pistas
 function renderPistas() {
   if (!ag) return;
   if (!Array.isArray(ag.pistas)) ag.pistas = [];
   var h = '';
   for (var i = 0; i < ag.pistas.length; i++) {
     var p = ag.pistas[i];
-    h += '<div class="sub" style="border-left: 3px solid var(--purple-neon); margin-bottom:8px;">';
+    h += '<div class="sub" style="border-left: 3px solid var(--accent-neon); margin-bottom:8px;">';
     h += '<div class="cols"><div><label>Alvo / Pista</label><input type="text" value="' + esc(p.titulo) + '" data-l="pistas" data-i="' + i + '" data-k="titulo" placeholder="Ex: Culto em Matinhos"></div>';
     h += '<div><label>Status</label><select data-l="pistas" data-i="' + i + '" data-k="status"><option value="Em Investigação"' + (p.status === 'Em Investigação' ? ' selected' : '') + '>Em Investigação</option><option value="Confirmado"' + (p.status === 'Confirmado' ? ' selected' : '') + '>Confirmado</option><option value="Eliminado"' + (p.status === 'Eliminado' ? ' selected' : '') + '>Eliminado</option></select></div></div>';
     h += '<div style="margin-top:6px"><label style="font-size:0.75rem; color:var(--muted)">Detalhes</label><input type="text" value="' + esc(p.detalhes) + '" data-l="pistas" data-i="' + i + '" data-k="detalhes" placeholder="Detalhes rápidos..."></div>';
@@ -1318,7 +1394,6 @@ function renderPistas() {
   if (box) box.innerHTML = h || '<p class="hint">Nenhuma pista registrada no quadro.</p>';
 }
 
-// Renderizar Tarefas
 function renderTarefas() {
   if (!ag) return;
   if (!Array.isArray(ag.tarefas)) ag.tarefas = [];
@@ -1624,5 +1699,23 @@ if ('serviceWorker' in navigator) {
 }
 })();
 </script>
+
+<!-- BOTÃO FLUTUANTE DE TEMAS (ELEMENTOS DO OUTRO LADO) -->
+<div style="position: fixed; left: 16px; bottom: 16px; z-index: 950;">
+  <button type="button" onclick="window.toggleThemeMenu()" style="width: 50px; height: 50px; border-radius: 25px; background: var(--panel-app); border: 2px solid var(--accent-neon); color: var(--accent-neon); box-shadow: 0 0 15px var(--glow-effect); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+    👁️
+  </button>
+
+  <!-- MENU SUSPENSO DOS ELEMENTOS -->
+  <div id="theme-menu" style="display: none; position: absolute; bottom: 60px; left: 0; background: var(--panel-app); border: 1px solid var(--border-app); border-radius: 10px; padding: 12px; width: 220px; box-shadow: 0 5px 25px rgba(0,0,0,0.9); z-index: 999;">
+    <div style="font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border-app); padding-bottom: 4px;">Elemento do Outro Lado</div>
+    
+    <button class="btn-s btn-sm" onclick="window.mudarTema('energia')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #c084fc;">🟣 Roxo - Energia</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('conhecimento')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #fbbf24;">🟡 Amarelo - Conhecimento</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('sangue')" style="width:100%; margin-bottom:5px; text-align:left; border-left: 4px solid #f87171;">🔴 Vermelho - Sangue</button>
+    <button class="btn-s btn-sm" onclick="window.mudarTema('morte')" style="width:100%; text-align:left; border-left: 4px solid #f4f4f5;">💀 Morte - Preto e Prata</button>
+  </div>
+</div>
+
 </body>
 </html>
